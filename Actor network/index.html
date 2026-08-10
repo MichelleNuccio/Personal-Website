@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calculating Empires | Precedent Study</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="intro-closed">
+    <div class="intro-gate" aria-live="polite">
+      <button
+        id="intro-square"
+        class="intro-square"
+        type="button"
+        aria-label="Open the Calculating Empires relational diagram"
+      >
+        <span class="intro-square-mark" aria-hidden="true"></span>
+        <span class="intro-label" aria-hidden="true">
+          <small>Click to discover the diagram and scroll to read about it.</small>
+        </span>
+      </button>
+    </div>
+
+    <main class="app-shell">
+      <section class="map-stage" aria-label="Mappa interattiva">
+        <div class="graph-wrap">
+          <svg id="empire-map" role="img" aria-labelledby="graph-title graph-desc">
+            <title id="graph-title">Force-directed tree su Calculating Empires</title>
+            <desc id="graph-desc">
+              Una mappa interattiva che organizza il precedent study di Calculating Empires.
+            </desc>
+          </svg>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="./d3.js"></script>
+  </body>
+</html>
