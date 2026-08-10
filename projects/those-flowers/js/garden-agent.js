@@ -248,5 +248,4 @@
   });
 
   connectFirebase();
-  inputEl.focus();
 })();

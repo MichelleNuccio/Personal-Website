@@ -5,6 +5,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Those Flowers are for you &lt;3 — Michelle Nuccio</title>
+  <script>
+    // Keep the project opening at the header, not at canvases lower on the page.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("load", () => window.scrollTo(0, 0));
+  </script>
 
   <!-- P5.js creates the 3D and 2D canvas sketches on this page. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
@@ -538,7 +543,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
   <script src="js/sound-garden.js?v=20260810-pink"></script>
   <script src="js/garden-agent.local.js"></script>
-  <script src="js/garden-agent.js?v=20260810-canvas10"></script>
+  <script src="js/garden-agent.js?v=20260810-noscroll"></script>
   <script src="js/3DCanvas_1.js?v=20260810-darker-flowers"></script>
   <script src="js/3DCanvas_2.js?v=20260810-soft-light"></script>
   <script src="js/2DCanvas_1.js?v=20260810-pink"></script>
