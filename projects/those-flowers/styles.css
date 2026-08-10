@@ -12,6 +12,21 @@
       overflow-x: hidden;
     }
 
+    a {
+      color: #ffb0e8;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    a:hover,
+    a:focus-visible {
+      color: #ffe8f7;
+    }
+
+    a:visited {
+      color: #ff9adf;
+    }
+
     /* Header area introduces the assignment and connects it to the portfolio language. */
     .page-header {
       width: min(1120px, calc(100% - 32px));
