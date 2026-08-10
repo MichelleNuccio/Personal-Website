@@ -136,7 +136,7 @@
     if (!hasRealOpenAIKey()) {
       return [
         "I am almost awake, but my OpenAI key is not connected yet.",
-        "Add your secret key in js/garden-agent.js, then ask me again.",
+        "Add your secret key in js/garden-agent.local.js, then ask me again.",
         "Until then: daisies bloom as small acts of kindness across the garden."
       ].join(" ");
     }

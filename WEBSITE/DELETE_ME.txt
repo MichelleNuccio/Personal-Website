@@ -1,0 +1,3 @@
+This empty folder is leftover from the reorganization.
+Active site files are now at the repo root and in projects/those-flowers/.
+You can delete this WEBSITE folder manually if your editor/Google Drive unlocks it.

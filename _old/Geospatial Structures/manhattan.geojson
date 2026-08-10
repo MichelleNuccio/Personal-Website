@@ -1,0 +1,8 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "properties": { "name": "Lower Manhattan", "color": "#8b5cf6" }, "geometry": { "type": "Polygon", "coordinates": [[[-74.019,40.700],[-74.012,40.724],[-73.993,40.724],[-73.971,40.710],[-73.990,40.700],[-74.019,40.700]]] } },
+    { "type": "Feature", "properties": { "name": "Midtown", "color": "#a78bfa" }, "geometry": { "type": "Polygon", "coordinates": [[[-74.012,40.724],[-74.002,40.760],[-73.976,40.767],[-73.959,40.743],[-73.993,40.724],[-74.012,40.724]]] } },
+    { "type": "Feature", "properties": { "name": "Upper Manhattan", "color": "#6d28d9" }, "geometry": { "type": "Polygon", "coordinates": [[[-74.002,40.760],[-73.997,40.806],[-73.933,40.874],[-73.925,40.850],[-73.959,40.743],[-73.976,40.767],[-74.002,40.760]]] } }
+  ]
+}

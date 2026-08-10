@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Sound Garden is a collective mood poll where every song becomes a flower."
+    />
+    <title>Sound Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="Sound Garden home">
+          <span class="brand-mark" aria-hidden="true">✳</span>
+          Sound Garden
+        </a>
+        <p class="live-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="connectionStatus">Demo garden</span>
+        </p>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow">A collective listening garden</p>
+        <h1>Plant a song for<br /><em>how you feel today.</em></h1>
+        <p class="intro-copy">
+          Choose a mood, leave one song title, and watch it bloom alongside
+          everyone else’s.
+        </p>
+      </section>
+
+      <section class="experience-grid">
+        <form id="pollForm" class="poll-card">
+          <div class="step">
+            <span class="step-number">01</span>
+            <fieldset>
+              <legend>How are you feeling?</legend>
+              <div id="moodOptions" class="mood-options"></div>
+            </fieldset>
+          </div>
+
+          <div class="step">
+            <span class="step-number">02</span>
+            <label for="songTitle">Which song matches that feeling?</label>
+            <input
+              id="songTitle"
+              name="songTitle"
+              type="text"
+              maxlength="80"
+              autocomplete="off"
+              placeholder="Enter a song title"
+              required
+            />
+            <p class="field-note">Song title only · maximum 80 characters</p>
+          </div>
+
+          <button class="plant-button" type="submit">
+            <span>Plant your song</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+          <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <aside class="results-card" aria-labelledby="resultsTitle">
+          <div class="results-heading">
+            <div>
+              <p class="eyebrow">Live poll</p>
+              <h2 id="resultsTitle">Today’s garden</h2>
+            </div>
+            <p class="total"><strong id="totalVotes">0</strong> flowers</p>
+          </div>
+          <div id="resultsList" class="results-list"></div>
+        </aside>
+      </section>
+
+      <section class="garden-section" aria-labelledby="gardenTitle">
+        <div class="garden-heading">
+          <div>
+            <p class="eyebrow">Community archive</p>
+            <h2 id="gardenTitle">Every answer becomes a flower.</h2>
+          </div>
+          <p>Tap a flower to reveal its song.</p>
+        </div>
+
+        <div id="garden" class="garden" aria-live="polite">
+          <div id="emptyGarden" class="empty-garden">
+            <span aria-hidden="true">✦</span>
+            <p>The garden is waiting for its first song.</p>
+          </div>
+          <div class="ground" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <footer>
+        <p>
+          Anonymous responses only. Please don’t enter names or personal
+          information.
+        </p>
+        <p>Sound Garden · Engagement Components 2026</p>
+      </footer>
+    </main>
+
+    <template id="flowerTemplate">
+      <button class="flower" type="button">
+        <span class="flower-head" aria-hidden="true">
+          <span class="petal petal-1"></span>
+          <span class="petal petal-2"></span>
+          <span class="petal petal-3"></span>
+          <span class="petal petal-4"></span>
+          <span class="petal petal-5"></span>
+          <span class="flower-center"></span>
+        </span>
+        <span class="stem" aria-hidden="true"></span>
+        <span class="song-tooltip"></span>
+      </button>
+    </template>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+    <script src="poll-app.js"></script>
+  </body>
+</html>

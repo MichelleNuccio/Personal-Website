@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+:root { font-family: Roboto, Arial, sans-serif; color: #171717; background: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { display: flex; justify-content: space-between; padding: 22px 40px; border-bottom: 1px solid #d8d8d8; font-size: 12px; letter-spacing: .08em; }
+main { width: min(900px, calc(100% - 40px)); margin: 64px auto; }
+h1 { font-size: clamp(32px, 6vw, 64px); font-weight: 300; margin: 0 0 16px; }
+.intro { color: #666; font-size: 18px; margin-bottom: 72px; }
+section { margin: 0 0 88px; }
+h2 { font-size: 16px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+p { line-height: 1.6; }
+.map { width: 100%; height: 440px; margin: 24px 0 16px; border: 1px solid #ccc; background: #eee; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; }
+button, input { min-height: 38px; padding: 8px 14px; border: 1px solid #bbb; background: #fff; font: inherit; }
+button { cursor: pointer; }
+button:hover { background: #eee; }
+input { flex: 1 1 220px; }
+.status { color: #666; font-size: 14px; }
+@media (max-width: 600px) { header { padding: 18px 20px; } .map { height: 360px; } }

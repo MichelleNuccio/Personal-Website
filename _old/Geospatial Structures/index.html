@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New York City — Mapbox Examples</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js"></script>
+</head>
+<body>
+  <header><span>GEOSPATIAL STRUCTURES</span><span>Mapbox GL JS</span></header>
+  <main>
+    <h1>New York City Interactive Maps</h1>
+    <p class="intro">Tre esempi progressivi: marker, geometrie GeoJSON e dati caricati da un file esterno.</p>
+
+    <section>
+      <h2>01 — Interactive map with markers</h2>
+      <p>Una mappa di Manhattan con marker, popup e controlli di navigazione.</p>
+      <div id="mapbox-container-1" class="map"></div>
+      <div class="controls">
+        <button id="zoomIn">Zoom in</button><button id="zoomOut">Zoom out</button><button id="resetMap1">Reset view</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>02 — Lines and regions</h2>
+      <p>Linee e poligoni definiti direttamente nello script come GeoJSON.</p>
+      <div id="mapbox-container-2" class="map"></div>
+      <div class="controls">
+        <button id="toggleLines">Hide lines</button><button id="toggleRegions">Hide regions</button><button id="resetMap2">Reset view</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>03 — External GeoJSON</h2>
+      <p>Quartieri caricati dal file <code>manhattan.geojson</code>.</p>
+      <div id="mapbox-container-3" class="map"></div>
+      <div class="controls">
+        <input id="searchFeature" type="search" placeholder="Search neighborhood">
+        <button id="resetFilters">Reset</button><button id="fitToData">Fit to data</button>
+      </div>
+      <p id="dataStatus" class="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="mapBox_Sketch_01.js"></script>
+  <script src="mapBox_Sketch_02.js"></script>
+  <script src="mapBox_Sketch_03.js"></script>
+</body>
+</html>
