@@ -43,6 +43,88 @@
       line-height: 1.55;
     }
 
+    .project-frame {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 154, 223, 0.36);
+    }
+
+    .project-frame h2 {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #ffb0e8;
+    }
+
+    .project-frame p,
+    .project-frame li {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(255, 209, 244, 0.86);
+    }
+
+    .aesthetic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .aesthetic-card {
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 154, 223, 0.34);
+      background: rgba(255, 154, 223, 0.06);
+    }
+
+    .aesthetic-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #ffb0e8;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .canvas-kicker {
+      margin: 0 0 6px !important;
+      color: rgba(255, 176, 232, 0.72) !important;
+      font-size: 10px !important;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .canvas-intent {
+      margin: 0 0 10px !important;
+    }
+
+    .canvas-meta {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 6px;
+    }
+
+    .canvas-meta li {
+      font-size: 11px;
+      line-height: 1.45;
+      color: rgba(255, 209, 244, 0.78);
+    }
+
+    .canvas-meta strong {
+      color: #ffb0e8;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 860px) {
+      .aesthetic-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* Grid that holds the canvas studies side by side on desktop and stacked on mobile. */
     .canvas-grid {
       width: min(1120px, calc(100% - 32px));

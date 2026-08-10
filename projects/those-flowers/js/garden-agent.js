@@ -1,5 +1,6 @@
 (() => {
-  // Canvas 10 — Garden Agent chatbot (OpenAI + Firebase), styled for the flower site.
+  // Canvas 10 — Garden Agent: OpenAI chatbot + optional Firebase message sync.
+  // Persona stays inside the flower / kindness thesis of this project page.
   const root = document.getElementById("garden-agent");
   if (!root) return;
 

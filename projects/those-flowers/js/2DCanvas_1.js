@@ -1,4 +1,6 @@
 (() => {
+  // Canvas 01 — Signal Bloom: step-by-step 2D daisy construction (P5.js).
+  // Interaction: DRAW NEXT advances stem → leaves → petals → center.
   function resizeSketchToParent(p, parentElement) {
     if (!parentElement) return;
     p.resizeCanvas(parentElement.clientWidth, parentElement.clientHeight);

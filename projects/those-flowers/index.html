@@ -4,7 +4,7 @@
   <!-- Basic page settings for a responsive 3D assignment page. -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>3D Spatial Canvas - Michelle Nuccio</title>
+  <title>Those Flowers are for you &lt;3 — Michelle Nuccio</title>
 
   <!-- P5.js creates the 3D and 2D canvas sketches on this page. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
@@ -13,58 +13,121 @@
   <link href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet" />
   <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 
-  <link rel="stylesheet" href="styles.css?v=20260810-reorg" />
+  <link rel="stylesheet" href="styles.css?v=20260810-docs" />
 </head>
 <body>
   <header class="page-header">
     <a href="../../index.html">BACK TO ARCHIVE</a>
     <h1>Those Flowers are for you &lt;3</h1>
     <p>
-      In a landscape increasingly shaped by algorithms, virtual flowers become quiet acts of kindness: small gestures reminding us that even digital spaces can bloom with care.
+      A Computational Design Workflows final project that gathers every class exercise into one garden:
+      flowers as digital gestures of kindness, from 2D drawing to 3D interaction, data, maps, engagement, and agents.
     </p>
+
+    <div class="project-frame">
+      <h2>Aesthetic priorities</h2>
+      <div class="aesthetic-grid">
+        <div class="aesthetic-card">
+          <strong>01 · Neon meadow</strong>
+          Night black (#09010f) with bubblegum fuchsia (#ff9adf). Wireframe glow over soft depth — never purple-gradient defaults.
+        </div>
+        <div class="aesthetic-card">
+          <strong>02 · Terminal garden</strong>
+          Monospace voice, panel borders, and archive UI so the site feels like a living instrument, not a brochure.
+        </div>
+        <div class="aesthetic-card">
+          <strong>03 · Daisy as thesis</strong>
+          <em>Bellis perennis</em> is the recurring subject: seasonal bloom, ecology, geography, care, and collective listening.
+        </div>
+      </div>
+      <p>
+        Docs for this project live in <code>docs/</code> (style system, feature plan, project ideas) and
+        <code>README.md</code>. Each canvas below states intent, interaction, and sources.
+      </p>
+    </div>
   </header>
 
   <main class="canvas-grid">
-    <section class="canvas-panel">
+    <section class="canvas-panel" id="canvas-01">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · P5.js 2D drawing</p>
         <h2>CANVAS 01 / SIGNAL BLOOM</h2>
-        <p>Starts empty. Click the button to reveal each part: stem, leaves, petals one by one, then the center. No floating dots or wave lines.</p>
+        <p class="canvas-intent">
+          A step-by-step construction of a daisy from an empty field — drawing as slow attention rather than instant decoration.
+        </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> DRAW NEXT reveals stem, leaves, petals, then center.</li>
+          <li><strong>Methods:</strong> P5.js 2D primitives; no particles or wave ornaments.</li>
+          <li><strong>References:</strong> Botanical line drawings; instructional flower-construction diagrams.</li>
+        </ul>
       </div>
       <div id="flower-illustration-a" class="canvas-holder" aria-label="2D illustrated signal flower canvas">
         <button type="button" id="signal-bloom-step" class="canvas-step-btn">DRAW NEXT</button>
       </div>
     </section>
 
-    <section class="canvas-panel">
+    <section class="canvas-panel" id="canvas-02">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · P5.js 2D atmosphere</p>
         <h2>CANVAS 02 / NIGHT GARDEN</h2>
-        <p>A second 2D study with a nocturnal bouquet drawn only through glowing outlines and drifting bubble contours.</p>
+        <p class="canvas-intent">
+          A nocturnal bouquet study: outline and glow replace fill, so presence is suggested rather than rendered solid.
+        </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> Ambient animation; watch outlines and bubble contours drift.</li>
+          <li><strong>Methods:</strong> P5.js stroke-led geometry, layered translucency.</li>
+          <li><strong>References:</strong> Night gardens, neon signage, soft bioluminescent metaphors.</li>
+        </ul>
       </div>
       <div id="flower-illustration-b" class="canvas-holder" aria-label="2D illustrated night flower canvas"></div>
     </section>
 
-    <section class="canvas-panel">
+    <section class="canvas-panel" id="canvas-03">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · P5.js WEBGL / 3D form</p>
         <h2>CANVAS 03 / DATA BOUQUET</h2>
-        <p>Orbit the camera to inspect a luminous bouquet: converging cylinder stems, ellipsoid petals, spherical cores, leaves, and tiny sparkling perfume bubbles.</p>
+        <p class="canvas-intent">
+          Translate the daisy into luminous 3D mass: stems, petals, cores, and perfume sparks as spatial data sculpture.
+        </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> Orbit / drag the camera around the bouquet.</li>
+          <li><strong>Methods:</strong> P5 WEBGL cylinders, ellipsoids, spheres; soft pink materials.</li>
+          <li><strong>References:</strong> Speculative botanical models; perfume as invisible spatial field.</li>
+        </ul>
       </div>
-      <div id="portrait-canvas" class="canvas-holder" aria-label="3D stylized self portrait canvas"></div>
+      <div id="portrait-canvas" class="canvas-holder" aria-label="3D stylized bouquet canvas"></div>
     </section>
 
-    <section class="canvas-panel">
+    <section class="canvas-panel" id="canvas-04">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · 3D interaction / chance</p>
         <h2>CANVAS 04 / M'AMA NON M'AMA</h2>
-        <p>Click the flower to pluck one glossy 3D petal at a time. The result alternates between M'AMA and NON M'AMA.</p>
+        <p class="canvas-intent">
+          The childhood petal game becomes a click ritual: each pluck toggles love / not-love, mixing folklore with computation.
+        </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> Click to pluck one petal; status flips M'AMA / NON M'AMA.</li>
+          <li><strong>Methods:</strong> P5 WEBGL picking + state machine for remaining petals.</li>
+          <li><strong>References:</strong> He loves me / he loves me not; Italian vernacular play.</li>
+        </ul>
       </div>
-      <div id="archive-field-canvas" class="canvas-holder" aria-label="3D archive field canvas">
+      <div id="archive-field-canvas" class="canvas-holder" aria-label="3D petal pluck canvas">
         <div id="love-status" class="love-status">CLICK TO PLUCK</div>
       </div>
     </section>
 
-    <section class="canvas-panel timeline-panel">
+    <section class="canvas-panel timeline-panel" id="canvas-05">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · temporal / data viz</p>
         <h2>CANVAS 05 / TEMPORAL BLOOM</h2>
-        <p>Monthly GBIF/iNaturalist observations of <em>Bellis perennis</em> in Italy, used as a seasonal proxy for daisy flowering.</p>
+        <p class="canvas-intent">
+          Seasonality as evidence: monthly observation counts become a bloom calendar for Italy's daisy season.
+        </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> Read bars + bloom-index curve; peak in spring months.</li>
+          <li><strong>Dataset:</strong> ~1,498 GBIF/iNaturalist-linked records of <em>Bellis perennis</em> (Italy), aggregated by month.</li>
+          <li><strong>Methods:</strong> D3 scales, bars, and a normalized cyan index line.</li>
+        </ul>
       </div>
       <div class="timeline-layout">
         <div class="timeline-stage">
@@ -81,10 +144,18 @@
       </div>
     </section>
 
-    <section class="canvas-panel network-panel">
+    <section class="canvas-panel network-panel" id="canvas-06">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · relational / actor-network</p>
         <h2>CANVAS 06 / RELATIONAL STRUCTURES</h2>
-        <p>A D3 actor-network of <em>Bellis perennis</em> in its ecosystem: pollinators, nectar, pollen, habitat, and human care as linked relations.</p>
+        <p class="canvas-intent">
+          The daisy is not alone: pollinators, nectar, meadow, and human care form a living graph of relations.
+        </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> Hover, drag, and click nodes to read relation stories.</li>
+          <li><strong>Methods:</strong> D3 force-directed graph with typed nodes (organism, pollinator, resource, place, social).</li>
+          <li><strong>References:</strong> Actor-network thinking; pollination ecology of <em>Bellis perennis</em>.</li>
+        </ul>
       </div>
       <div class="network-layout">
         <div class="network-stage">
@@ -108,14 +179,18 @@
       </div>
     </section>
 
-    <section class="canvas-panel map-panel">
+    <section class="canvas-panel map-panel" id="canvas-07">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · geospatial structures</p>
         <h2>CANVAS 07 / GEOSPATIAL BLOOM</h2>
-        <p>
-          MapLibre geospatial canvas of <em>Bellis perennis</em> occurrences in Italy from
-          <a href="https://www.gbif.org/taxon/5WH44" target="_blank" rel="noopener">GBIF taxon 5WH44</a>,
-          loaded as local GeoJSON and styled for seasonal legibility.
+        <p class="canvas-intent">
+          Ground the metaphor in place: Italy's daisy occurrences become a seasonal map of presence.
         </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> Pan/zoom, search a region, reset, fit-to-data.</li>
+          <li><strong>Dataset:</strong> Local GeoJSON from <a href="https://www.gbif.org/taxon/5WH44" target="_blank" rel="noopener">GBIF taxon 5WH44</a> + country outlines.</li>
+          <li><strong>Methods:</strong> MapLibre GL; month-colored points for seasonal legibility.</li>
+        </ul>
       </div>
       <div class="map-layout">
         <div class="map-stage">
@@ -123,15 +198,15 @@
         </div>
         <aside class="map-notes">
           <strong id="bloom-map-detail-title">LOADING</strong>
-          <div id="bloom-map-detail-body">Fetching daisy occurrences and country outlinesâ€¦</div>
+          <div id="bloom-map-detail-body">Fetching daisy occurrences and country outlines…</div>
           <div class="map-controls">
-            <input id="bloom-map-search" type="search" placeholder="Search region (e.g. Toscana)" />
+            <input id="bloom-map-search" type="search" placeholder="Search region (Toscana)" />
             <div class="map-actions">
               <button type="button" id="bloom-map-reset">Reset</button>
               <button type="button" id="bloom-map-fit">Fit data</button>
             </div>
           </div>
-          <p id="bloom-map-status">Preparing mapâ€¦</p>
+          <p id="bloom-map-status">Preparing map…</p>
           <div class="map-legend" aria-hidden="true">
             <span><i class="map-swatch spring"></i> spring peak</span>
             <span><i class="map-swatch summer"></i> summer</span>
@@ -141,14 +216,18 @@
       </div>
     </section>
 
-    <section class="canvas-panel globe-panel">
+    <section class="canvas-panel globe-panel" id="canvas-08">
       <div class="panel-copy">
+        <p class="canvas-kicker">Class lineage · global geospatial / time</p>
         <h2>CANVAS 08 / DAISY GLOBE</h2>
-        <p>
-          A spinning global archive of <em>Bellis perennis</em> from
-          <a href="https://www.gbif.org/taxon/5WH44" target="_blank" rel="noopener">GBIF taxon 5WH44</a>.
-          Drag the year rail to watch daisy observations bloom across the planet over time.
+        <p class="canvas-intent">
+          Expand from Italy to Earth: drag time and watch daisy records accumulate as a planetary archive of noticing.
         </p>
+        <ul class="canvas-meta">
+          <li><strong>Interaction:</strong> Year slider filters occurrences up to the selected year; rotate the globe.</li>
+          <li><strong>Dataset:</strong> Global <em>Bellis perennis</em> GeoJSON (GBIF 5WH44) + countries basemap.</li>
+          <li><strong>Methods:</strong> MapLibre globe projection; year-encoded color classes.</li>
+        </ul>
       </div>
       <div class="globe-layout">
         <div class="globe-stage">
@@ -158,13 +237,13 @@
             <input id="daisy-year-slider" type="range" min="1890" max="2026" value="2026" step="1" aria-label="Show occurrences up to year" />
             <span class="globe-year-min">past</span>
             <strong id="daisy-selected-year">2026</strong>
-            <small id="daisy-year-count">â€”</small>
+            <small id="daisy-year-count">—</small>
           </aside>
         </div>
         <aside class="globe-notes">
           <strong id="daisy-globe-detail-title">LOADING</strong>
-          <div id="daisy-globe-detail-body">Preparing the daisy globeâ€¦</div>
-          <p id="daisy-globe-status">Loadingâ€¦</p>
+          <div id="daisy-globe-detail-body">Preparing the daisy globe…</div>
+          <p id="daisy-globe-status">Loading…</p>
           <div class="globe-legend" aria-hidden="true">
             <span><i class="globe-swatch early"></i> early records</span>
             <span><i class="globe-swatch mid"></i> late 20th c.</span>
@@ -178,8 +257,16 @@
     <section class="canvas-panel sound-panel" id="sound-garden">
       <div class="panel-copy">
         <div>
+          <p class="canvas-kicker">Class lineage · engagement / collective poll</p>
           <h2>CANVAS 09 / SOUND GARDEN</h2>
-          <p>Plant a song for how you feel. Each mood becomes a neon flower in a collective listening garden.</p>
+          <p class="canvas-intent">
+            Turn feeling into shared flora: each anonymous mood + song title plants a neon flower in a listening garden.
+          </p>
+          <ul class="canvas-meta">
+            <li><strong>Interaction:</strong> Choose mood, enter song title, plant; tap flowers to reveal songs.</li>
+            <li><strong>Methods:</strong> Firebase Realtime Database (live) or local demo garden; CSS neon flowers.</li>
+            <li><strong>References:</strong> Collective mood boards; anonymous care rituals online.</li>
+          </ul>
         </div>
         <p class="sg-live-status">
           <span class="sg-status-dot" aria-hidden="true"></span>
@@ -191,7 +278,7 @@
         <div class="sg-experience">
           <form id="sg-pollForm" class="sg-poll">
             <div class="sg-step">
-              <span class="sg-step-label">01 Â· How are you feeling?</span>
+              <span class="sg-step-label">01 · How are you feeling?</span>
               <fieldset>
                 <legend class="visually-hidden">Mood</legend>
                 <div id="sg-moodOptions" class="sg-mood-options"></div>
@@ -199,7 +286,7 @@
             </div>
 
             <div class="sg-step">
-              <label class="sg-step-label" for="sg-songTitle">02 Â· Which song matches that feeling?</label>
+              <label class="sg-step-label" for="sg-songTitle">02 · Which song matches that feeling?</label>
               <input
                 id="sg-songTitle"
                 name="songTitle"
@@ -209,12 +296,12 @@
                 placeholder="Enter a song title"
                 required
               />
-              <p class="sg-field-note">Song title only Â· max 80 characters Â· anonymous</p>
+              <p class="sg-field-note">Song title only · max 80 characters · anonymous</p>
             </div>
 
             <button class="sg-plant-button" type="submit">
               <span>Plant your song</span>
-              <span aria-hidden="true">â†—</span>
+              <span aria-hidden="true">↗</span>
             </button>
             <p id="sg-formMessage" class="sg-form-message" role="status" aria-live="polite"></p>
           </form>
@@ -223,7 +310,7 @@
             <div class="sg-results-heading">
               <div>
                 <span class="sg-step-label">Live poll</span>
-                <h3 id="sg-resultsTitle">Todayâ€™s garden</h3>
+                <h3 id="sg-resultsTitle">Today's garden</h3>
               </div>
               <p class="sg-total"><strong id="sg-totalVotes">0</strong> flowers</p>
             </div>
@@ -238,12 +325,12 @@
           </div>
           <div id="sg-garden" class="sg-garden" aria-live="polite">
             <div id="sg-emptyGarden" class="sg-empty">
-              <span aria-hidden="true">âœ¦</span>
+              <span aria-hidden="true">✦</span>
               <p>The garden is waiting for its first song.</p>
             </div>
             <div class="sg-ground" aria-hidden="true"></div>
           </div>
-          <p class="sg-footnote">Anonymous responses only. Please donâ€™t enter names or personal information.</p>
+          <p class="sg-footnote">Anonymous responses only. Please don't enter names or personal information.</p>
         </div>
       </div>
 
@@ -266,8 +353,16 @@
     <section class="canvas-panel chat-panel" id="garden-agent">
       <div class="panel-copy">
         <div>
+          <p class="canvas-kicker">Class lineage · agents / OpenAI + Firebase</p>
           <h2>CANVAS 10 / GARDEN AGENT</h2>
-          <p>A flower-site chatbot powered by OpenAI, with optional Firebase sync for shared messages.</p>
+          <p class="canvas-intent">
+            A soft guide for the garden: ask about bloom, kindness, ecology, or any canvas — the agent stays inside the flower thesis.
+          </p>
+          <ul class="canvas-meta">
+            <li><strong>Interaction:</strong> Chat with Garden Agent; messages can sync via Firebase when configured.</li>
+            <li><strong>Methods:</strong> OpenAI Chat Completions + optional Realtime DB; local secrets file (never committed).</li>
+            <li><strong>References:</strong> Course Chat Bot tutorial; persona as site docent rather than generic assistant.</li>
+          </ul>
         </div>
         <p class="sg-live-status">
           <span class="sg-status-dot" aria-hidden="true"></span>
@@ -280,10 +375,10 @@
           <p class="ga-kicker">Guide of the field</p>
           <h3>Ask the garden about bloom, kindness, and the canvases.</h3>
           <p>
-            Try: â€œWhen do daisies peak in Italy?â€, â€œWhat is Sound Garden?â€, or â€œWhy flowers as kindness?â€
+            Try: "When do daisies peak in Italy?", "What is Sound Garden?", or "Why flowers as kindness?"
           </p>
           <div class="ga-meta">
-            <p id="ga-status" class="ga-status" role="status" aria-live="polite">Startingâ€¦</p>
+            <p id="ga-status" class="ga-status" role="status" aria-live="polite">Starting…</p>
           </div>
         </aside>
 
@@ -295,7 +390,7 @@
               id="ga-input"
               rows="2"
               maxlength="500"
-              placeholder="Write to Garden Agentâ€¦"
+              placeholder="Write to Garden Agent…"
             ></textarea>
             <button id="ga-send" type="button">SEND</button>
           </div>

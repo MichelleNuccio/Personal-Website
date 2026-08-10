@@ -330,8 +330,8 @@ function drawIntroWindow(win) {
   const bodyY = textY;
   const bodyMaxH = win.h - bodyY - 18 * s;
   // Readable body text that still fits the full intro inside the panel.
-  const fontSize = constrain(win.h * 0.026, 13, 16);
-  const leading = fontSize * 1.38;
+  const fontSize = constrain(win.h * 0.032, 15, 19);
+  const leading = fontSize * 1.4;
   drawWrappedParagraphs(introText, textX, bodyY, textW, bodyMaxH, fontSize, leading);
 
   pop();
