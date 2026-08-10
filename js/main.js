@@ -60,30 +60,37 @@ function draw() {
   drawForegroundParticles();
 }
 
-// Calculates responsive layout: About panel on the left, computer + printer on the right.
+// Calculates responsive layout: About panel left half, computer + printer right half.
 function getStage() {
-  const marginX = max(24, width * 0.03);
+  const marginX = max(20, width * 0.025);
   const marginY = min(width, height) * 0.045;
   const headerH = 64;
   const topY = marginY + headerH + 22;
   const bottomY = height * 0.94;
   const availableH = bottomY - topY;
-  const gap = max(28, width * 0.025);
+  const gap = max(20, width * 0.02);
 
-  // Left column: large About Me panel.
-  const leftW = constrain(width * 0.44, 340, 620);
+  // Split the usable width into two equal halves.
+  const halfW = (width - marginX * 2 - gap) / 2;
+
+  // Left column: About Me panel fills the left half.
   const introWindow = {
     x: marginX,
     y: topY,
-    w: leftW,
+    w: halfW,
     h: availableH,
     s: 1
   };
 
-  // Right column: larger computer + printer, top-aligned with the About panel.
-  const rightX = marginX + leftW + gap;
-  const rightW = width - rightX - marginX;
-  const machineScale = constrain(min(rightW / 900, availableH / 520), 0.72, 1.25);
+  // Right column: computer + printer fill the right half.
+  const rightX = marginX + halfW + gap;
+  const rightW = halfW;
+  const baseMachinesW = 520 + 335 + 36;
+  const machineScale = constrain(
+    min(rightW / baseMachinesW, availableH / 430) * 0.98,
+    0.7,
+    1.55
+  );
   const computerW = 520 * machineScale;
   const computerH = 430 * machineScale;
   const printerW = 335 * machineScale;
