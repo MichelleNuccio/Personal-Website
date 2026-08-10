@@ -55,7 +55,7 @@ window.PortfolioData = {
       collaborators: "",
       year: "2026",
       imageLabel: "FLOWERS",
-      image: "assets/flowers-cover.jpg",
+      image: "assets/daisy-icon.svg",
       imagePosition: "center center",
       url: "projects/those-flowers/",
       description: "An exploration developed for the Computational Workflow class, weaving together interactive studies where flowers become a recurring symbol of kindness."

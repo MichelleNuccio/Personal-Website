@@ -15,7 +15,7 @@
     };                                                                                          // Close this object or function part.
 
     p.draw = () => {                                                                            // This runs again and again to animate the canvas.
-      p.background(7, 0, 12);                                                                   // Paint the whole canvas before drawing the next frame.
+      p.background(255, 255, 255);                                                                   // White trial page fill.
       drawSoft2DGrid(p);                                                                        // Do this step to build the drawing.
       drawNightBouquet();                                                                       // Do this step to build the drawing.
       drawPerfumeDots2D();                                                                      // Do this step to build the drawing.
@@ -38,12 +38,12 @@
       p.translate(cx, cy);                                                                      // Move the drawing origin to a new place.
 
       for (const flower of flowers) {                                                           // 'for' repeats these steps many times.
-        p.stroke(255, 154, 223, 70);                                                              // Choose the outline color; numbers are red, green, blue, alpha.
+        p.stroke(72, 168, 110, 160);                                                            // Shared green for stems.
         p.noFill();                                                                             // Draw only outlines, with no inside color.
-        p.strokeWeight(3 * flower.s);                                                           // Choose how thick the outline line is.
+        p.strokeWeight(1.2 * flower.s);                                                         // Thinner stem lines.
         p.bezier(0, 210, flower.x * 0.18, 132, flower.x * 0.65, 72, flower.x, flower.y + 34);   // Draw a smooth curve using four points.
-        p.stroke(255, 209, 244, 150);                                                           // Choose the outline color; numbers are red, green, blue, alpha.
-        p.strokeWeight(1.5 * flower.s);                                                         // Choose how thick the outline line is.
+        p.stroke(72, 168, 110, 210);                                                            // Same green, slightly stronger pass.
+        p.strokeWeight(0.8 * flower.s);                                                         // Even thinner inner stem line.
         p.bezier(0, 210, flower.x * 0.18, 132, flower.x * 0.65, 72, flower.x, flower.y + 34);   // Draw a smooth curve using four points.
       }                                                                                         // Close this small group of instructions.
 
@@ -68,21 +68,21 @@
         p.push();                                                                               // Save the current drawing position, rotation, and style.
         p.rotate(a);                                                                            // Rotate the 2D drawing direction.
         p.noFill();                                                                             // Draw only outlines, with no inside color.
-        p.stroke(255, 255, 255, 120);                                                           // White outer petal glow.
-        p.strokeWeight(2.6 * flower.s);                                                         // Choose how thick the outline line is.
+        p.stroke(255, 154, 223, 150);                                                           // Pink outer petal (visible on white).
+        p.strokeWeight(1.2 * flower.s);                                                         // Thinner petal outline.
         p.ellipse((42 + wobble) * flower.s, 0, 102 * flower.s, 31 * flower.s);                  // Draw an oval.
-        p.stroke(255, 255, 255, 210);                                                           // White inner petal line.
-        p.strokeWeight(1.2 * flower.s);                                                         // Choose how thick the outline line is.
+        p.stroke(255, 110, 200, 200);                                                           // Deeper pink inner petal line.
+        p.strokeWeight(0.7 * flower.s);                                                         // Thinner inner petal line.
         p.ellipse((39 + wobble) * flower.s, 0, 72 * flower.s, 20 * flower.s);                   // Draw an oval.
         p.pop();                                                                                // Restore the saved drawing position, rotation, and style.
       }                                                                                         // Close this small group of instructions.
 
       p.noFill();                                                                               // Draw only outlines, with no inside color.
       p.stroke(255, 214, 64, 240);                                                              // Yellow flower center.
-      p.strokeWeight(2);                                                                        // Choose how thick the outline line is.
+      p.strokeWeight(1.2);                                                                      // Thinner center ring.
       p.circle(0, 0, 31 * flower.s);                                                            // Draw a circle.
       p.stroke(255, 248, 190, 220);                                                             // Soft yellow highlight.
-      p.strokeWeight(1);                                                                        // Choose how thick the outline line is.
+      p.strokeWeight(0.8);                                                                      // Thinner highlight.
       p.circle(7 * flower.s, -6 * flower.s, 8 * flower.s);                                      // Draw a circle.
       p.pop();                                                                                  // Restore the saved drawing position, rotation, and style.
     }                                                                                           // Close this small group of instructions.
@@ -92,8 +92,8 @@
       p.translate(x, y);                                                                        // Move the drawing origin to a new place.
       p.rotate(rotation);                                                                       // Rotate the 2D drawing direction.
       p.noFill();                                                                               // Draw only outlines, with no inside color.
-      p.stroke(110, 255, 226, 95);                                                              // Choose the outline color; numbers are red, green, blue, alpha.
-      p.strokeWeight(1.4);                                                                      // Choose how thick the outline line is.
+      p.stroke(72, 168, 110, 200);                                                              // Same green as stems.
+      p.strokeWeight(0.9);                                                                      // Thinner leaf outline.
       p.ellipse(0, 0, 88 * leafScale, 24 * leafScale);                                          // Draw an oval.
       p.line(-30 * leafScale, 0, 30 * leafScale, 0);                                            // Draw a straight line.
       p.pop();                                                                                  // Restore the saved drawing position, rotation, and style.

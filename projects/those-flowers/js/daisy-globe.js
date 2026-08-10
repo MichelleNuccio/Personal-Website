@@ -11,31 +11,10 @@
   const detailTitle = document.getElementById("daisy-globe-detail-title");
   const detailBody = document.getElementById("daisy-globe-detail-body");
 
-  const wireframeStyle = {
-    version: 8,
-    projection: { type: "globe" },
-    sources: {},
-    layers: [
-      {
-        id: "space",
-        type: "background",
-        paint: { "background-color": "#050008" }
-      }
-    ],
-    sky: {
-      "sky-color": "#120018",
-      "horizon-color": "#ffb0e8",
-      "fog-color": "#1a0520",
-      "sky-horizon-blend": 0.12,
-      "horizon-fog-blend": 0.08,
-      "fog-ground-blend": 0.42,
-      "atmosphere-blend": 0.16
-    }
-  };
-
   const map = new maplibregl.Map({
     container: "daisy-globe",
-    style: wireframeStyle,
+    // Realistic basemap coastlines instead of simplified Natural Earth 110m polygons.
+    style: "https://tiles.openfreemap.org/styles/positron",
     center: [12, 28],
     zoom: 1.25,
     minZoom: 0.6,
@@ -79,15 +58,13 @@
   map.on("load", async () => {
     try {
       setStatus("Loading globe layers…");
+      if (typeof map.setProjection === "function") {
+        map.setProjection({ type: "globe" });
+      }
 
-      const [countriesRes, bloomRes] = await Promise.all([
-        fetch("data/countries-110m.geojson"),
-        fetch("data/bellis-perennis-global.geojson")
-      ]);
-      if (!countriesRes.ok) throw new Error(`countries HTTP ${countriesRes.status}`);
+      const bloomRes = await fetch("data/bellis-perennis-global.geojson");
       if (!bloomRes.ok) throw new Error(`occurrences HTTP ${bloomRes.status}`);
 
-      const countries = await countriesRes.json();
       const bloom = await bloomRes.json();
       allFeatures = bloom.features || [];
 
@@ -100,31 +77,6 @@
         yearSlider.max = String(maxYear);
         yearSlider.value = String(maxYear);
       }
-
-      map.addSource("countries", { type: "geojson", data: countries });
-      map.addLayer({
-        id: "countries-fill",
-        type: "fill",
-        source: "countries",
-        paint: {
-          "fill-color": "#14001a",
-          "fill-opacity": 0.78
-        }
-      });
-      map.addLayer({
-        id: "countries-line",
-        type: "line",
-        source: "countries",
-        paint: {
-          "line-color": "rgba(255, 154, 223, 0.34)",
-          "line-width": [
-            "interpolate", ["linear"], ["zoom"],
-            0, 0.35,
-            4, 0.85
-          ],
-          "line-opacity": 0.9
-        }
-      });
 
       map.addSource("daisies", { type: "geojson", data: bloom });
 
@@ -152,11 +104,11 @@
           ],
           "heatmap-color": [
             "interpolate", ["linear"], ["heatmap-density"],
-            0, "rgba(5,0,8,0)",
+            0, "rgba(255,255,255,0)",
             0.15, "rgba(255, 214, 64, 0.18)",
             0.4, "rgba(255, 176, 232, 0.45)",
             0.7, "rgba(255, 154, 223, 0.75)",
-            1, "rgba(255, 255, 255, 0.95)"
+            1, "rgba(255, 154, 223, 0.95)"
           ]
         }
       });
@@ -187,7 +139,7 @@
             minYear, "#7a4dff",
             1980, "#ffb0e8",
             2005, "#ffd640",
-            maxYear, "#ffffff"
+            maxYear, "#ff9adf"
           ],
           "circle-radius": [
             "interpolate", ["linear"], ["zoom"],

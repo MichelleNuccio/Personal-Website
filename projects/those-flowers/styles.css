@@ -453,7 +453,7 @@
     }
 
     .network-link-label {
-      fill: rgba(255, 209, 244, 0.55);
+      fill: #9a4a72;
       font-family: "Courier New", monospace;
       font-size: 9px;
       text-anchor: middle;
@@ -469,7 +469,7 @@
     }
 
     .network-node-label {
-      fill: rgba(255, 209, 244, 0.92);
+      fill: #6b2a4a;
       font-family: "Courier New", monospace;
       font-size: 10px;
       pointer-events: none;
@@ -1207,7 +1207,7 @@
 
     .sg-total {
       margin: 0;
-      color: rgba(255, 209, 244, 0.7);
+      color: #6b2a4a;
       font-size: 11px;
       text-transform: uppercase;
     }
@@ -1229,7 +1229,7 @@
       grid-template-columns: 1fr auto;
       gap: 6px 10px;
       align-items: center;
-      color: rgba(255, 209, 244, 0.86);
+      color: #6b2a4a;
       font-size: 12px;
       text-transform: uppercase;
     }

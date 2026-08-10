@@ -14,11 +14,17 @@ let copyButtonBounds = null;
 let archiveWindowBounds = null;
 let profileImage;
 
-// Main color palette for the neon wireframe interface.
-// The names still say "Blue" from an earlier version, but the RGB values now create the fuchsia look.
+// Main color palette — LIGHT_THEME white + original bubblegum pink #ff9adf
+const LIGHT_THEME = true;
 const neonBlue = [255, 154, 223];
-const deepBlue = [92, 0, 78];
-const softBlue = [255, 110, 230];
+const deepBlue = LIGHT_THEME ? [255, 214, 236] : [92, 0, 78];
+const softBlue = LIGHT_THEME ? [26, 10, 22] : [255, 110, 230];
+const pageBg = LIGHT_THEME ? [255, 255, 255] : [12, 2, 18];
+const panelBg = LIGHT_THEME ? [255, 255, 255, 255] : [24, 0, 27, 185];
+const screenBg = LIGHT_THEME ? [255, 255, 255, 255] : [30, 0, 28, 215];
+const uiBg = LIGHT_THEME ? [255, 255, 255, 255] : [32, 0, 30, 210];
+const gridAlpha = LIGHT_THEME ? 70 : 18;
+const gridStrong = LIGHT_THEME ? 160 : 70;
 
 // Introduction text drawn inside the ABOUT_ME.txt window on the landing page.
 const introText = [
@@ -36,7 +42,8 @@ function preload() {
 
 // Initializes the P5 canvas, font, and source text before animation starts.
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  const bannerH = LIGHT_THEME ? 40 : 0;
+  createCanvas(windowWidth, windowHeight - bannerH);
   pixelDensity(1);
   textFont("Courier New");
   fullText = cvLines.join("\n");
@@ -45,7 +52,7 @@ function setup() {
 
 // Main P5 loop: clears the frame, updates animation, and draws the full wireframe scene.
 function draw() {
-  background(12, 2, 18);
+  background(...pageBg);
   drawBlueprintBackground();
 
   const stage = getStage();
@@ -165,8 +172,8 @@ function drawBlueprintBackground() {
   strokeCap(SQUARE);
 
   const grid = 44;
-  stroke(neonBlue[0], neonBlue[1], neonBlue[2], 18);
-  strokeWeight(1);
+  stroke(neonBlue[0], neonBlue[1], neonBlue[2], gridAlpha);
+  strokeWeight(LIGHT_THEME ? 1.4 : 1);
   for (let x = (frameCount * 0.18) % grid; x < width; x += grid) {
     line(x, 0, x, height);
   }
@@ -174,9 +181,9 @@ function drawBlueprintBackground() {
     line(0, y, width, y);
   }
 
-  stroke(neonBlue[0], neonBlue[1], neonBlue[2], 70);
+  stroke(neonBlue[0], neonBlue[1], neonBlue[2], gridStrong);
   line(0, height * 0.7, width, height * 0.7);
-  stroke(neonBlue[0], neonBlue[1], neonBlue[2], 22);
+  stroke(neonBlue[0], neonBlue[1], neonBlue[2], LIGHT_THEME ? 70 : 22);
   for (let i = 0; i < 12; i++) {
     const y = height * 0.7 + i * 22;
     line(width * 0.22 - i * 32, y, width * 0.78 + i * 32, y);
@@ -243,7 +250,7 @@ function drawArchiveWindow(win) {
   push();
   translate(win.x, win.y);
 
-  fill(26, 0, 28, 190);
+  fill(...panelBg);
   stroke(neonBlue[0], neonBlue[1], neonBlue[2], 190);
   strokeWeight(1.4 * s);
   rect(0, 0, win.w, win.h, 8 * s);
@@ -289,7 +296,7 @@ function drawIntroWindow(win) {
   push();
   translate(win.x, win.y);
 
-  fill(24, 0, 27, 185);
+  fill(...panelBg);
   stroke(neonBlue[0], neonBlue[1], neonBlue[2], 180);
   strokeWeight(1.4 * s);
   rect(0, 0, win.w, win.h, 10 * s);
@@ -499,7 +506,7 @@ function drawScreenContent(screen) {
   drawingContext.clip();
 
   noStroke();
-  fill(30, 0, 28, 215);
+  fill(...screenBg);
   rect(0, 0, screen.w, screen.h);
 
   drawScreenGrid(screen);
@@ -539,7 +546,7 @@ function drawScreenContent(screen) {
     rect(18 * screen.s + (frameCount % 14) * 2 * screen.s, screen.h - 20 * screen.s, 9 * screen.s, 12 * screen.s);
   } else {
     const alpha = map(sin(frameCount * 0.12), -1, 1, 150, 255);
-    fill(32, 0, 30, 210);
+    fill(...uiBg);
     rect(24 * screen.s, screen.h * 0.5, screen.w - 48 * screen.s, 48 * screen.s, 4 * screen.s);
     stroke(neonBlue[0], neonBlue[1], neonBlue[2], alpha);
     strokeWeight(1.4 * screen.s);
@@ -572,7 +579,7 @@ function drawCopyStartButton(screen) {
     h: buttonH
   };
 
-  fill(32, 0, 30, 210);
+  fill(...uiBg);
   rect(buttonX, buttonY, buttonW, buttonH, 5 * screen.s);
   stroke(neonBlue[0], neonBlue[1], neonBlue[2], 190 + sin(frameCount * 0.08) * 45);
   strokeWeight(1.4 * screen.s);
@@ -781,7 +788,8 @@ function downloadCurriculumPdf() {
 
 // Keeps the canvas full-screen when the browser window changes size.
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  const bannerH = LIGHT_THEME ? 40 : 0;
+  resizeCanvas(windowWidth, windowHeight - bannerH);
 }
 
 // Restarts the typing and printing sequence when the user clicks/taps.

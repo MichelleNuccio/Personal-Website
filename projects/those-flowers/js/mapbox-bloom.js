@@ -13,22 +13,10 @@
 
   const monthNames = ["—", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-  const wireframeStyle = {
-    version: 8,
-    glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
-    sources: {},
-    layers: [
-      {
-        id: "space",
-        type: "background",
-        paint: { "background-color": "#09010f" }
-      }
-    ]
-  };
-
   const map = new maplibregl.Map({
     container: "bloom-map",
-    style: wireframeStyle,
+    // Realistic OpenStreetMap-based light basemap (not the jagged 110m countries outline).
+    style: "https://tiles.openfreemap.org/styles/positron",
     center: [12.5, 42.3],
     zoom: 5.1,
     minZoom: 3.5,
@@ -74,43 +62,11 @@
 
   map.on("load", async () => {
     try {
-      setStatus("Loading GeoJSON…");
+      setStatus("Loading GBIF occurrences…");
 
-      const [countriesRes, bloomRes] = await Promise.all([
-        fetch("data/countries-110m.geojson"),
-        fetch("data/bellis-perennis-it.geojson")
-      ]);
-
-      if (!countriesRes.ok) throw new Error(`countries HTTP ${countriesRes.status}`);
+      const bloomRes = await fetch("data/bellis-perennis-it.geojson");
       if (!bloomRes.ok) throw new Error(`occurrences HTTP ${bloomRes.status}`);
-
-      const countries = await countriesRes.json();
       const bloom = await bloomRes.json();
-
-      map.addSource("countries", { type: "geojson", data: countries });
-      map.addLayer({
-        id: "countries-fill",
-        type: "fill",
-        source: "countries",
-        paint: {
-          "fill-color": "#1a0520",
-          "fill-opacity": 0.55
-        }
-      });
-      map.addLayer({
-        id: "countries-line",
-        type: "line",
-        source: "countries",
-        paint: {
-          "line-color": "rgba(255, 154, 223, 0.28)",
-          "line-width": [
-            "interpolate", ["linear"], ["zoom"],
-            3, 0.4,
-            8, 1.1
-          ],
-          "line-opacity": 0.9
-        }
-      });
 
       map.addSource("bellis", { type: "geojson", data: bloom });
 
@@ -138,7 +94,7 @@
           ],
           "heatmap-color": [
             "interpolate", ["linear"], ["heatmap-density"],
-            0, "rgba(9,1,15,0)",
+            0, "rgba(255,255,255,0)",
             0.2, "rgba(122,77,255,0.25)",
             0.45, "rgba(255,154,223,0.45)",
             0.7, "rgba(255,176,232,0.7)",
@@ -191,7 +147,7 @@
       setStatus(`${bloom.features.length} GBIF records · Italy · taxon 5WH44`);
       setDetail(
         "BELLIS PERENNIS",
-        "Occurrence points from <a href=\"https://www.gbif.org/taxon/5WH44\" target=\"_blank\" rel=\"noopener\">GBIF taxon 5WH44</a>. Color encodes month of observation — spring peaks glow hottest."
+        "Occurrence points from <a href=\"https://www.gbif.org/taxon/5WH44\" target=\"_blank\" rel=\"noopener\">GBIF taxon 5WH44</a> on a realistic OpenStreetMap basemap. Color encodes month of observation — spring peaks glow hottest."
       );
 
       map.on("mouseenter", "bellis-points", () => {

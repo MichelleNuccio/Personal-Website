@@ -1,6 +1,6 @@
 (() => {                                                                                        // Start a private little code room so names do not leak outside.
   const palette = {                                                                             // Save the color palette used by this sketch.
-    background: [6, 0, 13],                                                                     // Do this step to build the drawing.
+    background: [255, 255, 255],                                                                     // White trial page fill.
     neon: [232, 110, 198],                                                                      // Slightly deeper pink core.
     soft: [236, 128, 208],                                                                      // Soft petal pink, a bit darker.
     pale: [245, 180, 225],                                                                      // Pale accent.

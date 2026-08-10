@@ -37,7 +37,7 @@
     };
 
     p.draw = () => {
-      p.background(9, 1, 15);
+      p.background(255, 255, 255);
       drawSoft2DGrid(p);
       // Only draw flower parts that have been unlocked by clicks.
       if (drawStep > 0) {
@@ -76,30 +76,30 @@
       p.push();
       p.translate(cx, cy);
 
-      // 1) Stem
+      // 1) Stem — same green as leaves / Canvas 02
       if (step >= 1) {
-        p.stroke(255, 154, 223, 150);
-        p.strokeWeight(2);
+        p.stroke(72, 168, 110, 200);
+        p.strokeWeight(1.4);
         p.noFill();
         p.bezier(0, 55, -24, 118, 20, 190, -6, 260);
       }
 
-      // 2) Leaves
+      // 2) Leaves — same green
       if (step >= 2) {
         drawIllustratedLeaf(-42, 138, -0.75, 1);
         drawIllustratedLeaf(46, 172, 0.72, 0.82);
       }
 
-      // 3+) Petals, one per click
+      // 3+) Petals, one per click — bubblegum pink so they stay visible on white
       for (let i = 0; i < visiblePetals; i++) {
         const a = (i * p.TWO_PI) / petalCount;
         p.push();
         p.rotate(a);
         p.noStroke();
-        p.fill(255, 255, 255, 175);
+        p.fill(255, 154, 223, 200);
         p.ellipse(42, 0, 84, 26);
-        p.stroke(255, 255, 255, 200);
-        p.strokeWeight(1);
+        p.stroke(255, 110, 200, 230);
+        p.strokeWeight(1.4);
         p.noFill();
         p.ellipse(42, 0, 84, 26);
         p.pop();
@@ -121,9 +121,9 @@
       p.push();
       p.translate(x, y);
       p.rotate(rotation);
-      p.fill(42, 164, 148, 120);
-      p.stroke(110, 255, 226, 130);
-      p.strokeWeight(1.4);
+      p.fill(72, 168, 110, 110);
+      p.stroke(72, 168, 110, 220);
+      p.strokeWeight(1.2);
       p.ellipse(0, 0, 82 * leafScale, 25 * leafScale);
       p.line(-30 * leafScale, 0, 30 * leafScale, 0);
       p.pop();
