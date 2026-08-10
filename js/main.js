@@ -42,8 +42,7 @@ function preload() {
 
 // Initializes the P5 canvas, font, and source text before animation starts.
 function setup() {
-  const bannerH = LIGHT_THEME ? 40 : 0;
-  createCanvas(windowWidth, windowHeight - bannerH);
+  createCanvas(windowWidth, windowHeight);
   pixelDensity(1);
   textFont("Courier New");
   fullText = cvLines.join("\n");
@@ -788,8 +787,7 @@ function downloadCurriculumPdf() {
 
 // Keeps the canvas full-screen when the browser window changes size.
 function windowResized() {
-  const bannerH = LIGHT_THEME ? 40 : 0;
-  resizeCanvas(windowWidth, windowHeight - bannerH);
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 // Restarts the typing and printing sequence when the user clicks/taps.
