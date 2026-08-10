@@ -314,15 +314,17 @@ function drawIntroWindow(win) {
   const pad = 20 * s;
   const contentY = 48 * s;
   const contentH = win.h - contentY - 22 * s;
-  const imageW = min(260 * s, win.w * 0.38);
+  const contentGap = 18 * s;
+  const contentW = win.w - pad * 2 - contentGap;
+  const imageW = contentW * 0.5;
+  const textW = contentW * 0.5;
   drawFramedProfileImage(pad, contentY, imageW, contentH, 6 * s);
 
   noStroke();
   fill(softBlue[0], softBlue[1], softBlue[2], 245);
   textAlign(LEFT, TOP);
-  const textX = pad + imageW + 24 * s;
+  const textX = pad + imageW + contentGap;
   const textY = contentY + 6 * s;
-  const textW = win.w - textX - pad;
   textStyle(NORMAL);
 
   const bodyY = textY;
