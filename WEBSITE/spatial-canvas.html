@@ -1,0 +1,1894 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Basic page settings for a responsive 3D assignment page. -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3D Spatial Canvas - Michelle Nuccio</title>
+
+  <!-- P5.js creates the 3D and 2D canvas sketches on this page. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <!-- MapLibre (Mapbox-compatible) powers the geospatial Canvas 07. -->
+  <link href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+
+  <style>
+    /* Page structure: dark interface, fuchsia accents, and readable project text. */
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #09010f;
+      color: #ffd1f4;
+      font-family: "Courier New", monospace;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    /* Header area introduces the assignment and connects it to the portfolio language. */
+    .page-header {
+      width: min(1120px, calc(100% - 32px));
+      margin: 28px auto 18px;
+      border: 1px solid rgba(255, 154, 223, 0.62);
+      background: rgba(24, 0, 28, 0.68);
+      box-shadow: 0 0 24px rgba(255, 154, 223, 0.2);
+      padding: 18px;
+    }
+
+    .page-header a {
+      color: #ffb0e8;
+      text-decoration: none;
+    }
+
+    .page-header h1 {
+      margin: 10px 0 10px;
+      font-size: clamp(24px, 5vw, 58px);
+      letter-spacing: 0;
+      line-height: 0.95;
+      color: #ffb0e8;
+      text-shadow: 0 0 18px rgba(255, 154, 223, 0.72);
+    }
+
+    .page-header p {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(14px, 1.8vw, 18px);
+      line-height: 1.55;
+    }
+
+    /* Grid that holds the canvas studies side by side on desktop and stacked on mobile. */
+    .canvas-grid {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto 34px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    /* Each canvas panel includes a title, short description, and one canvas. */
+    .canvas-panel {
+      min-height: 600px;
+      border: 1px solid rgba(255, 154, 223, 0.58);
+      background:
+        linear-gradient(135deg, rgba(255, 154, 223, 0.12), transparent 46%),
+        rgba(16, 0, 22, 0.86);
+      box-shadow: 0 0 24px rgba(255, 154, 223, 0.18);
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .panel-copy {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(255, 154, 223, 0.36);
+    }
+
+    .panel-copy h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #ffb0e8;
+    }
+
+    .panel-copy p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: rgba(255, 209, 244, 0.84);
+    }
+
+    .canvas-holder {
+      min-height: 480px;
+      position: relative;
+    }
+
+    .love-status {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      z-index: 2;
+      color: #ffb0e8;
+      font-size: 16px;
+      font-weight: 700;
+      text-shadow: 0 0 12px rgba(255, 154, 223, 0.9);
+      pointer-events: none;
+    }
+
+    .canvas-step-btn {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      z-index: 3;
+      min-height: 40px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 154, 223, 0.75);
+      background: rgba(32, 0, 30, 0.82);
+      color: #ffb0e8;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(255, 154, 223, 0.28);
+    }
+
+    .canvas-step-btn:hover:not(:disabled) {
+      border-color: rgba(255, 176, 232, 0.95);
+      background: rgba(255, 154, 223, 0.18);
+      box-shadow: 0 0 18px rgba(255, 154, 223, 0.42);
+    }
+
+    .canvas-step-btn:disabled {
+      opacity: 0.72;
+      cursor: default;
+    }
+
+    .canvas-holder canvas {
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-panel {
+      grid-column: 1 / -1;
+      min-height: 560px;
+    }
+
+    .timeline-layout {
+      min-height: 480px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 0;
+    }
+
+    .timeline-stage {
+      min-width: 0;
+      border-right: 1px solid rgba(255, 154, 223, 0.36);
+      background-image:
+        linear-gradient(rgba(255, 154, 223, 0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 154, 223, 0.10) 1px, transparent 1px);
+      background-size: 34px 34px;
+    }
+
+    #flower-timeline {
+      width: 100%;
+      min-height: 480px;
+      display: block;
+    }
+
+    .timeline-notes {
+      padding: 16px;
+      color: rgba(255, 209, 244, 0.82);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .timeline-notes strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #20e7ff;
+      font-size: 18px;
+      text-shadow: 0 0 12px rgba(32, 231, 255, 0.72);
+    }
+
+    .timeline-legend {
+      display: grid;
+      gap: 9px;
+      margin-top: 18px;
+      text-transform: uppercase;
+      color: rgba(255, 176, 232, 0.9);
+    }
+
+    .timeline-legend span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timeline-swatch {
+      width: 16px;
+      height: 12px;
+      border: 1px solid #ff7ad4;
+      background: rgba(255, 154, 223, 0.35);
+      box-shadow: 0 0 8px rgba(255, 154, 223, 0.45);
+    }
+
+    .timeline-swatch.line {
+      height: 3px;
+      border: 0;
+      background: #20e7ff;
+      box-shadow: 0 0 8px rgba(32, 231, 255, 0.9);
+    }
+
+    .timeline-axis text {
+      fill: rgba(255, 176, 232, 0.9);
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+    }
+
+    .timeline-axis path,
+    .timeline-axis line {
+      stroke: rgba(255, 154, 223, 0.58);
+    }
+
+    .timeline-grid line {
+      stroke: rgba(255, 154, 223, 0.18);
+    }
+
+    .timeline-grid path {
+      display: none;
+    }
+
+    .timeline-bar {
+      fill: rgba(255, 154, 223, 0.28);
+      stroke: #ff7ad4;
+      stroke-width: 1.2px;
+      filter: drop-shadow(0 0 8px rgba(255, 154, 223, 0.38));
+    }
+
+    .timeline-bar.is-low {
+      fill: rgba(6, 204, 198, 0.14);
+      stroke: rgba(32, 231, 255, 0.72);
+    }
+
+    .timeline-line {
+      fill: none;
+      stroke: #20e7ff;
+      stroke-width: 2;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 8px rgba(32, 231, 255, 0.8));
+    }
+
+    .timeline-petal {
+      fill: url(#timelinePetalGradient);
+      stroke: rgba(255, 215, 255, 0.7);
+      stroke-width: 0.7px;
+      filter: drop-shadow(0 0 5px rgba(255, 154, 223, 0.9));
+    }
+
+    .timeline-core {
+      fill: #ff9adf;
+      stroke: #ffd0f5;
+      stroke-width: 0.9px;
+      filter: drop-shadow(0 0 8px rgba(255, 154, 223, 0.95));
+    }
+
+    .timeline-label {
+      fill: rgba(255, 209, 244, 0.82);
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    .network-panel {
+      grid-column: 1 / -1;
+      min-height: 620px;
+    }
+
+    .network-layout {
+      min-height: 520px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 0;
+    }
+
+    .network-stage {
+      min-width: 0;
+      border-right: 1px solid rgba(255, 154, 223, 0.36);
+      background-image:
+        linear-gradient(rgba(255, 154, 223, 0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 154, 223, 0.10) 1px, transparent 1px);
+      background-size: 34px 34px;
+    }
+
+    #flower-network {
+      width: 100%;
+      min-height: 520px;
+      display: block;
+    }
+
+    .network-notes {
+      padding: 16px;
+      color: rgba(255, 209, 244, 0.82);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .network-notes strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #20e7ff;
+      font-size: 16px;
+      text-shadow: 0 0 12px rgba(32, 231, 255, 0.72);
+    }
+
+    .network-meta {
+      color: #ffb0e8;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .network-legend {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+      text-transform: uppercase;
+      color: rgba(255, 176, 232, 0.9);
+      font-size: 11px;
+    }
+
+    .network-legend span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .network-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .network-dot.organism { background: #ff9adf; color: #ff9adf; }
+    .network-dot.pollinator { background: #20e7ff; color: #20e7ff; }
+    .network-dot.resource { background: #ffb0e8; color: #ffb0e8; }
+    .network-dot.environment { background: #7a4dff; color: #7a4dff; }
+    .network-dot.place { background: #06ccc6; color: #06ccc6; }
+    .network-dot.social { background: #ff8ee8; color: #ff8ee8; }
+
+    .network-hint {
+      margin-top: 16px;
+      opacity: 0.72;
+      font-size: 11px;
+    }
+
+    .network-link {
+      stroke: rgba(255, 154, 223, 0.42);
+      stroke-width: 1.4px;
+      filter: drop-shadow(0 0 4px rgba(255, 154, 223, 0.35));
+    }
+
+    .network-link-label {
+      fill: rgba(255, 209, 244, 0.55);
+      font-family: "Courier New", monospace;
+      font-size: 9px;
+      text-anchor: middle;
+      pointer-events: none;
+    }
+
+    .network-node {
+      cursor: grab;
+    }
+
+    .network-node:active {
+      cursor: grabbing;
+    }
+
+    .network-node-label {
+      fill: rgba(255, 209, 244, 0.92);
+      font-family: "Courier New", monospace;
+      font-size: 10px;
+      pointer-events: none;
+      text-shadow: 0 0 8px rgba(255, 154, 223, 0.65);
+    }
+
+    .network-node.is-active .network-node-core {
+      stroke-width: 2.4px;
+    }
+
+    .network-node.is-active .network-node-halo {
+      opacity: 0.34;
+    }
+
+    .map-panel {
+      grid-column: 1 / -1;
+      min-height: 680px;
+    }
+
+    .map-layout {
+      min-height: 580px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 0;
+    }
+
+    .map-stage {
+      position: relative;
+      min-width: 0;
+      min-height: 580px;
+      border-right: 1px solid rgba(255, 154, 223, 0.36);
+      background:
+        radial-gradient(circle at center, rgba(255, 154, 223, 0.10), rgba(9, 1, 15, 0.96) 62%);
+    }
+
+    #bloom-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-notes {
+      padding: 16px;
+      color: rgba(255, 209, 244, 0.82);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .map-notes strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #20e7ff;
+      font-size: 16px;
+      text-shadow: 0 0 12px rgba(32, 231, 255, 0.72);
+    }
+
+    .map-notes a {
+      color: #ffb0e8;
+    }
+
+    .map-controls {
+      display: grid;
+      gap: 8px;
+      margin: 16px 0 12px;
+    }
+
+    .map-controls input,
+    .map-controls button {
+      min-height: 38px;
+      border: 1px solid rgba(255, 154, 223, 0.55);
+      background: rgba(32, 0, 30, 0.72);
+      color: #ffd1f4;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    .map-controls input {
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    .map-controls input:focus {
+      border-color: rgba(32, 231, 255, 0.8);
+      box-shadow: 0 0 12px rgba(32, 231, 255, 0.22);
+    }
+
+    .map-controls .map-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .map-controls button {
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #ffb0e8;
+    }
+
+    .map-controls button:hover {
+      background: rgba(255, 154, 223, 0.18);
+      border-color: rgba(255, 176, 232, 0.95);
+    }
+
+    #bloom-map-status {
+      margin: 0 0 14px;
+      color: #20e7ff;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 10px rgba(32, 231, 255, 0.45);
+    }
+
+    .map-legend {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+      text-transform: uppercase;
+      color: rgba(255, 176, 232, 0.9);
+      font-size: 11px;
+    }
+
+    .map-legend span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .map-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .map-swatch.spring { background: #ff7ad4; color: #ff7ad4; }
+    .map-swatch.summer { background: #20e7ff; color: #20e7ff; }
+    .map-swatch.winter { background: #7a4dff; color: #7a4dff; }
+
+    .maplibregl-ctrl-group {
+      background: rgba(20, 0, 24, 0.88) !important;
+      border: 1px solid rgba(255, 154, 223, 0.55) !important;
+      box-shadow: 0 0 16px rgba(255, 154, 223, 0.22) !important;
+    }
+
+    .maplibregl-ctrl-group button {
+      background-color: transparent !important;
+    }
+
+    .maplibregl-ctrl-group button + button {
+      border-top: 1px solid rgba(255, 154, 223, 0.35) !important;
+    }
+
+    .maplibregl-ctrl button span {
+      filter: invert(1) sepia(1) saturate(8) hue-rotate(270deg);
+    }
+
+    .bloom-map-popup .maplibregl-popup-content {
+      background: rgba(12, 2, 18, 0.96);
+      color: #ffd1f4;
+      border: 1px solid rgba(255, 154, 223, 0.7);
+      border-radius: 0;
+      box-shadow: 0 0 24px rgba(255, 154, 223, 0.35);
+      font-family: "Courier New", monospace;
+      padding: 12px 14px;
+      min-width: 180px;
+    }
+
+    .bloom-map-popup .maplibregl-popup-tip {
+      border-top-color: rgba(12, 2, 18, 0.96) !important;
+    }
+
+    .bloom-popup-kicker {
+      margin: 0 0 6px;
+      color: #20e7ff;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+    }
+
+    .bloom-map-popup strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #ffb0e8;
+      font-size: 14px;
+    }
+
+    .bloom-map-popup p {
+      margin: 0 0 4px;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .bloom-popup-meta {
+      color: rgba(255, 176, 232, 0.72);
+      font-size: 10px !important;
+    }
+
+    .globe-panel {
+      grid-column: 1 / -1;
+      min-height: 720px;
+    }
+
+    .globe-layout {
+      min-height: 620px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 0;
+    }
+
+    .globe-stage {
+      position: relative;
+      min-width: 0;
+      min-height: 620px;
+      border-right: 1px solid rgba(255, 154, 223, 0.36);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at center, rgba(255, 154, 223, 0.14), rgba(5, 0, 8, 0.98) 58%);
+    }
+
+    #daisy-globe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .globe-year-rail {
+      position: absolute;
+      z-index: 4;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      grid-template-rows: auto minmax(180px, 280px) auto auto auto;
+      justify-items: center;
+      gap: 8px;
+      color: #ffd1f4;
+      font-size: 10px;
+      pointer-events: none;
+    }
+
+    .globe-year-rail * {
+      pointer-events: auto;
+    }
+
+    .globe-year-rail input {
+      width: 26px;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      writing-mode: vertical-lr;
+      direction: rtl;
+      accent-color: #ff9adf;
+      cursor: ns-resize;
+    }
+
+    .globe-year-rail .globe-year-max,
+    .globe-year-rail .globe-year-min {
+      color: rgba(255, 176, 232, 0.55);
+      font-size: 9px;
+    }
+
+    .globe-year-rail strong {
+      color: #ffb0e8;
+      font-size: 18px;
+      font-weight: 400;
+      text-shadow: 0 0 12px rgba(255, 154, 223, 0.72);
+    }
+
+    .globe-year-rail small {
+      color: rgba(255, 209, 244, 0.7);
+      white-space: nowrap;
+    }
+
+    .globe-notes {
+      padding: 16px;
+      color: rgba(255, 209, 244, 0.82);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .globe-notes strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #ffd640;
+      font-size: 16px;
+      text-shadow: 0 0 12px rgba(255, 214, 64, 0.55);
+    }
+
+    .globe-notes a {
+      color: #ffb0e8;
+    }
+
+    #daisy-globe-status {
+      margin: 14px 0 0;
+      color: #20e7ff;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    .globe-legend {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+      text-transform: uppercase;
+      color: rgba(255, 176, 232, 0.9);
+      font-size: 11px;
+    }
+
+    .globe-legend span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .globe-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    .globe-swatch.early { background: #7a4dff; color: #7a4dff; }
+    .globe-swatch.mid { background: #ffb0e8; color: #ffb0e8; }
+    .globe-swatch.late { background: #ffd640; color: #ffd640; }
+    .globe-swatch.now { background: #ffffff; color: #ffffff; }
+
+    .sound-panel,
+    .chat-panel {
+      grid-column: 1 / -1;
+      min-height: auto;
+    }
+
+    .sound-panel .panel-copy,
+    .chat-panel .panel-copy {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .ga-shell {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.4fr);
+      min-height: 560px;
+      border-top: 1px solid rgba(255, 154, 223, 0.36);
+    }
+
+    .ga-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 22px 20px 24px;
+      border-right: 1px solid rgba(255, 154, 223, 0.36);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 176, 232, 0.18), transparent 55%),
+        linear-gradient(180deg, rgba(255, 154, 223, 0.08), rgba(8, 0, 12, 0.35));
+    }
+
+    .ga-kicker {
+      margin: 0;
+      color: rgba(255, 176, 232, 0.78);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .ga-aside h3 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2vw, 1.9rem);
+      line-height: 1.15;
+      color: #ffe8f7;
+    }
+
+    .ga-aside p {
+      margin: 0;
+      color: rgba(255, 232, 247, 0.78);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .ga-meta {
+      display: grid;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .ga-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 7px 12px;
+      border: 1px solid rgba(255, 154, 223, 0.42);
+      background: rgba(255, 154, 223, 0.08);
+      color: rgba(255, 208, 236, 0.9);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .ga-pill.is-live {
+      border-color: rgba(32, 231, 255, 0.55);
+      color: #b8f7ff;
+    }
+
+    .ga-pill.is-demo {
+      border-color: rgba(255, 214, 64, 0.5);
+      color: #ffe9a3;
+    }
+
+    .ga-status {
+      margin: 0;
+      color: rgba(255, 176, 232, 0.7);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .ga-chat {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-height: 0;
+      background:
+        radial-gradient(ellipse at 70% 10%, rgba(255, 154, 223, 0.16), transparent 45%),
+        linear-gradient(180deg, rgba(18, 0, 24, 0.55), rgba(8, 0, 12, 0.85));
+    }
+
+    .ga-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 360px;
+      max-height: 520px;
+      overflow-y: auto;
+      padding: 22px 20px;
+      scroll-behavior: smooth;
+    }
+
+    .ga-message {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: min(520px, 92%);
+    }
+
+    .ga-message.ga-user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .ga-message.ga-bot {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    .ga-bubble {
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 154, 223, 0.38);
+      background: rgba(255, 154, 223, 0.1);
+      color: #ffe8f7;
+    }
+
+    .ga-user .ga-bubble {
+      border-color: rgba(32, 231, 255, 0.42);
+      background: rgba(32, 231, 255, 0.1);
+    }
+
+    .ga-bubble strong {
+      display: block;
+      margin-bottom: 6px;
+      color: rgba(255, 176, 232, 0.88);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .ga-user .ga-bubble strong {
+      color: rgba(184, 247, 255, 0.9);
+    }
+
+    .ga-bubble p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .ga-time {
+      color: rgba(255, 176, 232, 0.55);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .ga-composer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 16px 18px 18px;
+      border-top: 1px solid rgba(255, 154, 223, 0.36);
+      background: rgba(255, 154, 223, 0.05);
+    }
+
+    .ga-composer textarea {
+      width: 100%;
+      min-height: 58px;
+      max-height: 140px;
+      resize: vertical;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 154, 223, 0.42);
+      background: rgba(8, 0, 12, 0.55);
+      color: #ffe8f7;
+      font: inherit;
+      line-height: 1.45;
+    }
+
+    .ga-composer textarea::placeholder {
+      color: rgba(255, 176, 232, 0.45);
+    }
+
+    .ga-composer textarea:focus {
+      outline: none;
+      border-color: rgba(255, 176, 232, 0.85);
+      box-shadow: 0 0 0 1px rgba(255, 154, 223, 0.35);
+    }
+
+    .ga-composer button {
+      align-self: stretch;
+      min-width: 108px;
+      padding: 0 18px;
+      border: 1px solid rgba(255, 154, 223, 0.7);
+      background: linear-gradient(180deg, rgba(255, 154, 223, 0.35), rgba(255, 154, 223, 0.12));
+      color: #ffe8f7;
+      font: inherit;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .ga-composer button:hover:not(:disabled) {
+      background: linear-gradient(180deg, rgba(255, 154, 223, 0.5), rgba(255, 154, 223, 0.18));
+    }
+
+    .ga-composer button:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    .sg-live-status {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin: 0;
+      color: rgba(255, 176, 232, 0.82);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .sg-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffd640;
+      box-shadow: 0 0 10px rgba(255, 214, 64, 0.65);
+    }
+
+    .sg-status-dot.connected {
+      background: #20e7ff;
+      box-shadow: 0 0 10px rgba(32, 231, 255, 0.75);
+    }
+
+    .sg-body {
+      display: grid;
+      gap: 0;
+    }
+
+    .sg-experience {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(240px, 0.75fr);
+      border-bottom: 1px solid rgba(255, 154, 223, 0.36);
+    }
+
+    .sg-poll,
+    .sg-results {
+      padding: 18px;
+    }
+
+    .sg-poll {
+      border-right: 1px solid rgba(255, 154, 223, 0.36);
+    }
+
+    .sg-step {
+      margin-bottom: 22px;
+    }
+
+    .sg-step-label {
+      display: block;
+      margin: 0 0 12px;
+      color: #ffb0e8;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .sg-poll fieldset {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .sg-mood-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sg-mood-option {
+      cursor: pointer;
+    }
+
+    .sg-mood-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sg-mood-option span {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 154, 223, 0.45);
+      background: rgba(32, 0, 30, 0.7);
+      color: #ffd1f4;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: 160ms ease;
+    }
+
+    .sg-mood-option span::before {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--mood-color);
+      box-shadow: 0 0 10px var(--mood-color);
+      content: "";
+    }
+
+    .sg-mood-option input:checked + span {
+      border-color: rgba(255, 176, 232, 0.95);
+      background: rgba(255, 154, 223, 0.18);
+      box-shadow: 0 0 16px rgba(255, 154, 223, 0.28);
+    }
+
+    #sg-songTitle {
+      width: 100%;
+      padding: 12px 0;
+      border: 0;
+      border-bottom: 1px solid rgba(255, 154, 223, 0.55);
+      outline: 0;
+      background: transparent;
+      color: #ffd1f4;
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+    }
+
+    #sg-songTitle:focus {
+      border-bottom-color: #20e7ff;
+      box-shadow: 0 1px 0 #20e7ff;
+    }
+
+    #sg-songTitle::placeholder {
+      color: rgba(255, 176, 232, 0.45);
+    }
+
+    .sg-field-note {
+      margin: 8px 0 0;
+      color: rgba(255, 209, 244, 0.55);
+      font-size: 11px;
+    }
+
+    .sg-plant-button {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      margin-top: 8px;
+      padding: 12px 14px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 154, 223, 0.75);
+      background: rgba(255, 154, 223, 0.16);
+      color: #ffb0e8;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 0 16px rgba(255, 154, 223, 0.28);
+    }
+
+    .sg-plant-button:hover {
+      background: rgba(255, 154, 223, 0.28);
+      border-color: rgba(255, 176, 232, 0.95);
+    }
+
+    .sg-plant-button:disabled {
+      cursor: wait;
+      opacity: 0.62;
+    }
+
+    .sg-form-message {
+      min-height: 18px;
+      margin: 10px 0 0;
+      color: #20e7ff;
+      font-size: 12px;
+    }
+
+    .sg-results-heading {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .sg-results-heading h3 {
+      margin: 0;
+      color: #ffb0e8;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .sg-total {
+      margin: 0;
+      color: rgba(255, 209, 244, 0.7);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .sg-total strong {
+      display: block;
+      color: #20e7ff;
+      font-size: 22px;
+      text-shadow: 0 0 12px rgba(32, 231, 255, 0.55);
+    }
+
+    .sg-results-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .sg-result-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 10px;
+      align-items: center;
+      color: rgba(255, 209, 244, 0.86);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .sg-result-track {
+      grid-column: 1 / -1;
+      height: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 154, 223, 0.28);
+      background: rgba(255, 154, 223, 0.08);
+    }
+
+    .sg-result-fill {
+      width: 0;
+      height: 100%;
+      background: var(--mood-color);
+      box-shadow: 0 0 10px var(--mood-color);
+      transition: width 500ms ease;
+    }
+
+    .sg-garden-wrap {
+      padding: 16px 16px 18px;
+    }
+
+    .sg-garden-heading {
+      display: flex;
+      gap: 16px;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .sg-garden-heading h3 {
+      margin: 0;
+      color: #ffb0e8;
+      font-size: 16px;
+    }
+
+    .sg-garden-heading p {
+      margin: 0;
+      color: rgba(255, 209, 244, 0.62);
+      font-size: 11px;
+    }
+
+    .sg-garden {
+      position: relative;
+      display: flex;
+      min-height: 360px;
+      gap: 8px;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      padding: 40px 20px 36px;
+      border: 1px solid rgba(255, 154, 223, 0.45);
+      background:
+        linear-gradient(rgba(255, 154, 223, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 154, 223, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(16, 0, 22, 0.2) 0%, rgba(9, 1, 15, 0.1) 58%, rgba(42, 0, 40, 0.75) 58.2%, rgba(24, 0, 28, 0.95) 100%),
+        #09010f;
+      background-size: 34px 34px, 34px 34px, auto, auto;
+      box-shadow: inset 0 0 40px rgba(255, 154, 223, 0.12);
+    }
+
+    .sg-ground {
+      position: absolute;
+      right: -6%;
+      bottom: -70px;
+      left: -6%;
+      height: 150px;
+      border-radius: 50% 50% 0 0;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 154, 223, 0.28), transparent 55%),
+        rgba(48, 0, 44, 0.95);
+      border-top: 1px solid rgba(255, 154, 223, 0.35);
+    }
+
+    .sg-empty {
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      z-index: 2;
+      width: 240px;
+      color: rgba(255, 209, 244, 0.62);
+      text-align: center;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+    }
+
+    .sg-empty span {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffb0e8;
+      font-size: 20px;
+      text-shadow: 0 0 12px rgba(255, 154, 223, 0.7);
+    }
+
+    .sg-flower {
+      --flower-color: #ffb0e8;
+      position: relative;
+      z-index: 3;
+      width: 68px;
+      height: var(--flower-height, 180px);
+      flex: 0 1 68px;
+      cursor: pointer;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      transform-origin: bottom center;
+      animation: sg-grow 650ms cubic-bezier(0.16, 0.9, 0.38, 1.25) both;
+    }
+
+    .sg-flower-head {
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      z-index: 3;
+      width: 50px;
+      height: 50px;
+      transform: translateX(-50%);
+      transition: 180ms ease;
+      filter: drop-shadow(0 0 8px rgba(255, 154, 223, 0.55));
+    }
+
+    .sg-flower:hover .sg-flower-head,
+    .sg-flower:focus .sg-flower-head,
+    .sg-flower.is-open .sg-flower-head {
+      transform: translateX(-50%) rotate(8deg) scale(1.12);
+    }
+
+    .sg-petal,
+    .sg-flower-center {
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .sg-petal {
+      width: 24px;
+      height: 27px;
+      background: var(--flower-color);
+      opacity: 0.92;
+    }
+
+    .sg-petal-1 { top: 0; left: 13px; }
+    .sg-petal-2 { top: 12px; right: 1px; transform: rotate(72deg); }
+    .sg-petal-3 { right: 6px; bottom: 0; transform: rotate(144deg); }
+    .sg-petal-4 { bottom: 0; left: 6px; transform: rotate(216deg); }
+    .sg-petal-5 { top: 12px; left: 1px; transform: rotate(288deg); }
+
+    .sg-flower-center {
+      top: 16px;
+      left: 16px;
+      z-index: 2;
+      width: 18px;
+      height: 18px;
+      background: #ffd640;
+      box-shadow:
+        inset 0 0 0 3px rgba(255, 248, 190, 0.85),
+        0 0 12px rgba(255, 214, 64, 0.8);
+    }
+
+    .sg-stem {
+      position: absolute;
+      top: 46px;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: #ff9adf;
+      box-shadow: 0 0 8px rgba(255, 154, 223, 0.7);
+      transform: translateX(-50%);
+    }
+
+    .sg-stem::after {
+      position: absolute;
+      top: 52%;
+      left: 2px;
+      width: 20px;
+      height: 10px;
+      border-radius: 100% 0 100% 0;
+      background: rgba(32, 231, 255, 0.55);
+      box-shadow: 0 0 8px rgba(32, 231, 255, 0.45);
+      transform: rotate(-18deg);
+      content: "";
+    }
+
+    .sg-song-tooltip {
+      position: absolute;
+      top: -46px;
+      left: 50%;
+      z-index: 5;
+      width: max-content;
+      max-width: 170px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255, 154, 223, 0.7);
+      background: rgba(12, 2, 18, 0.96);
+      color: #ffd1f4;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      line-height: 1.3;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 7px);
+      transition: 180ms ease;
+      box-shadow: 0 0 16px rgba(255, 154, 223, 0.3);
+    }
+
+    .sg-flower:hover .sg-song-tooltip,
+    .sg-flower:focus .sg-song-tooltip,
+    .sg-flower.is-open .sg-song-tooltip {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .sg-footnote {
+      margin: 12px 0 0;
+      color: rgba(255, 209, 244, 0.5);
+      font-size: 11px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes sg-grow {
+      from {
+        opacity: 0;
+        transform: scaleY(0);
+      }
+      to {
+        opacity: 1;
+        transform: scaleY(1);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .canvas-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-layout,
+      .network-layout,
+      .map-layout,
+      .globe-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-stage,
+      .network-stage,
+      .map-stage,
+      .globe-stage {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 154, 223, 0.36);
+      }
+
+      .map-stage,
+      .globe-stage {
+        min-height: 460px;
+      }
+
+      .globe-year-rail {
+        left: 10px;
+        grid-template-rows: auto minmax(140px, 210px) auto auto auto;
+      }
+
+      .sound-panel .panel-copy {
+        flex-direction: column;
+      }
+
+      .sg-experience {
+        grid-template-columns: 1fr;
+      }
+
+      .sg-poll {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 154, 223, 0.36);
+      }
+
+      .sg-garden {
+        min-height: 300px;
+      }
+
+      .chat-panel .panel-copy {
+        flex-direction: column;
+      }
+
+      .ga-shell {
+        grid-template-columns: 1fr;
+        min-height: 520px;
+      }
+
+      .ga-aside {
+        border-right: 0;
+        border-bottom: 1px solid rgba(255, 154, 223, 0.36);
+      }
+
+      .ga-messages {
+        min-height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html">BACK TO ARCHIVE</a>
+    <h1>Those Flowers are for you &lt;3</h1>
+    <p>
+      In a landscape increasingly shaped by algorithms, virtual flowers become quiet acts of kindness: small gestures reminding us that even digital spaces can bloom with care.
+    </p>
+  </header>
+
+  <main class="canvas-grid">
+    <section class="canvas-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 01 / SIGNAL BLOOM</h2>
+        <p>Starts empty. Click the button to reveal each part: stem, leaves, petals one by one, then the center. No floating dots or wave lines.</p>
+      </div>
+      <div id="flower-illustration-a" class="canvas-holder" aria-label="2D illustrated signal flower canvas">
+        <button type="button" id="signal-bloom-step" class="canvas-step-btn">DRAW NEXT</button>
+      </div>
+    </section>
+
+    <section class="canvas-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 02 / NIGHT GARDEN</h2>
+        <p>A second 2D study with a nocturnal bouquet drawn only through glowing outlines and drifting bubble contours.</p>
+      </div>
+      <div id="flower-illustration-b" class="canvas-holder" aria-label="2D illustrated night flower canvas"></div>
+    </section>
+
+    <section class="canvas-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 03 / DATA BOUQUET</h2>
+        <p>Orbit the camera to inspect a luminous bouquet: converging cylinder stems, ellipsoid petals, spherical cores, leaves, and tiny sparkling perfume bubbles.</p>
+      </div>
+      <div id="portrait-canvas" class="canvas-holder" aria-label="3D stylized self portrait canvas"></div>
+    </section>
+
+    <section class="canvas-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 04 / M'AMA NON M'AMA</h2>
+        <p>Click the flower to pluck one glossy 3D petal at a time. The result alternates between M'AMA and NON M'AMA.</p>
+      </div>
+      <div id="archive-field-canvas" class="canvas-holder" aria-label="3D archive field canvas">
+        <div id="love-status" class="love-status">CLICK TO PLUCK</div>
+      </div>
+    </section>
+
+    <section class="canvas-panel timeline-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 05 / TEMPORAL BLOOM</h2>
+        <p>Monthly GBIF/iNaturalist observations of <em>Bellis perennis</em> in Italy, used as a seasonal proxy for daisy flowering.</p>
+      </div>
+      <div class="timeline-layout">
+        <div class="timeline-stage">
+          <svg id="flower-timeline" role="img" aria-label="Temporal diagram of daisy flowering observations"></svg>
+        </div>
+        <aside class="timeline-notes">
+          <strong>1.498 RECORDS</strong>
+          April is the dataset peak, followed by March and May. The bars are monthly observation counts; the cyan curve is normalized from 0 to 1.
+          <div class="timeline-legend" aria-hidden="true">
+            <span><i class="timeline-swatch"></i> observations</span>
+            <span><i class="timeline-swatch line"></i> bloom index</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="canvas-panel network-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 06 / RELATIONAL STRUCTURES</h2>
+        <p>A D3 actor-network of <em>Bellis perennis</em> in its ecosystem: pollinators, nectar, pollen, habitat, and human care as linked relations.</p>
+      </div>
+      <div class="network-layout">
+        <div class="network-stage">
+          <svg id="flower-network" role="img" aria-label="Relational diagram of the daisy pollination ecosystem"></svg>
+        </div>
+        <aside class="network-notes">
+          <strong id="network-detail-title">BELLIS PERENNIS</strong>
+          <div id="network-detail-body">
+            Hover or drag a node to explore how the daisy relates to bees, nectar, meadow, and the wider living web.
+          </div>
+          <div class="network-legend" aria-hidden="true">
+            <span><i class="network-dot organism"></i> organism</span>
+            <span><i class="network-dot pollinator"></i> pollinator</span>
+            <span><i class="network-dot resource"></i> resource</span>
+            <span><i class="network-dot environment"></i> environment</span>
+            <span><i class="network-dot place"></i> place</span>
+            <span><i class="network-dot social"></i> social</span>
+          </div>
+          <p class="network-hint">Drag nodes to rearrange the graph. Click a node for its relation story.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="canvas-panel map-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 07 / GEOSPATIAL BLOOM</h2>
+        <p>
+          MapLibre geospatial canvas of <em>Bellis perennis</em> occurrences in Italy from
+          <a href="https://www.gbif.org/taxon/5WH44" target="_blank" rel="noopener">GBIF taxon 5WH44</a>,
+          loaded as local GeoJSON and styled for seasonal legibility.
+        </p>
+      </div>
+      <div class="map-layout">
+        <div class="map-stage">
+          <div id="bloom-map" aria-label="Map of Bellis perennis GBIF occurrences in Italy"></div>
+        </div>
+        <aside class="map-notes">
+          <strong id="bloom-map-detail-title">LOADING</strong>
+          <div id="bloom-map-detail-body">Fetching daisy occurrences and country outlines…</div>
+          <div class="map-controls">
+            <input id="bloom-map-search" type="search" placeholder="Search region (e.g. Toscana)" />
+            <div class="map-actions">
+              <button type="button" id="bloom-map-reset">Reset</button>
+              <button type="button" id="bloom-map-fit">Fit data</button>
+            </div>
+          </div>
+          <p id="bloom-map-status">Preparing map…</p>
+          <div class="map-legend" aria-hidden="true">
+            <span><i class="map-swatch spring"></i> spring peak</span>
+            <span><i class="map-swatch summer"></i> summer</span>
+            <span><i class="map-swatch winter"></i> winter / autumn</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="canvas-panel globe-panel">
+      <div class="panel-copy">
+        <h2>CANVAS 08 / DAISY GLOBE</h2>
+        <p>
+          A spinning global archive of <em>Bellis perennis</em> from
+          <a href="https://www.gbif.org/taxon/5WH44" target="_blank" rel="noopener">GBIF taxon 5WH44</a>.
+          Drag the year rail to watch daisy observations bloom across the planet over time.
+        </p>
+      </div>
+      <div class="globe-layout">
+        <div class="globe-stage">
+          <div id="daisy-globe" aria-label="Global globe of Bellis perennis observations over time"></div>
+          <aside class="globe-year-rail" aria-label="Observation year timeline">
+            <span class="globe-year-max">now</span>
+            <input id="daisy-year-slider" type="range" min="1890" max="2026" value="2026" step="1" aria-label="Show occurrences up to year" />
+            <span class="globe-year-min">past</span>
+            <strong id="daisy-selected-year">2026</strong>
+            <small id="daisy-year-count">—</small>
+          </aside>
+        </div>
+        <aside class="globe-notes">
+          <strong id="daisy-globe-detail-title">LOADING</strong>
+          <div id="daisy-globe-detail-body">Preparing the daisy globe…</div>
+          <p id="daisy-globe-status">Loading…</p>
+          <div class="globe-legend" aria-hidden="true">
+            <span><i class="globe-swatch early"></i> early records</span>
+            <span><i class="globe-swatch mid"></i> late 20th c.</span>
+            <span><i class="globe-swatch late"></i> 2000s</span>
+            <span><i class="globe-swatch now"></i> recent</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="canvas-panel sound-panel" id="sound-garden">
+      <div class="panel-copy">
+        <div>
+          <h2>CANVAS 09 / SOUND GARDEN</h2>
+          <p>Plant a song for how you feel. Each mood becomes a neon flower in a collective listening garden.</p>
+        </div>
+        <p class="sg-live-status">
+          <span class="sg-status-dot" aria-hidden="true"></span>
+          <span id="sg-connectionStatus">Demo garden</span>
+        </p>
+      </div>
+
+      <div class="sg-body">
+        <div class="sg-experience">
+          <form id="sg-pollForm" class="sg-poll">
+            <div class="sg-step">
+              <span class="sg-step-label">01 · How are you feeling?</span>
+              <fieldset>
+                <legend class="visually-hidden">Mood</legend>
+                <div id="sg-moodOptions" class="sg-mood-options"></div>
+              </fieldset>
+            </div>
+
+            <div class="sg-step">
+              <label class="sg-step-label" for="sg-songTitle">02 · Which song matches that feeling?</label>
+              <input
+                id="sg-songTitle"
+                name="songTitle"
+                type="text"
+                maxlength="80"
+                autocomplete="off"
+                placeholder="Enter a song title"
+                required
+              />
+              <p class="sg-field-note">Song title only · max 80 characters · anonymous</p>
+            </div>
+
+            <button class="sg-plant-button" type="submit">
+              <span>Plant your song</span>
+              <span aria-hidden="true">↗</span>
+            </button>
+            <p id="sg-formMessage" class="sg-form-message" role="status" aria-live="polite"></p>
+          </form>
+
+          <aside class="sg-results" aria-labelledby="sg-resultsTitle">
+            <div class="sg-results-heading">
+              <div>
+                <span class="sg-step-label">Live poll</span>
+                <h3 id="sg-resultsTitle">Today’s garden</h3>
+              </div>
+              <p class="sg-total"><strong id="sg-totalVotes">0</strong> flowers</p>
+            </div>
+            <div id="sg-resultsList" class="sg-results-list"></div>
+          </aside>
+        </div>
+
+        <div class="sg-garden-wrap">
+          <div class="sg-garden-heading">
+            <h3>Every answer becomes a flower.</h3>
+            <p>Tap a flower to reveal its song.</p>
+          </div>
+          <div id="sg-garden" class="sg-garden" aria-live="polite">
+            <div id="sg-emptyGarden" class="sg-empty">
+              <span aria-hidden="true">✦</span>
+              <p>The garden is waiting for its first song.</p>
+            </div>
+            <div class="sg-ground" aria-hidden="true"></div>
+          </div>
+          <p class="sg-footnote">Anonymous responses only. Please don’t enter names or personal information.</p>
+        </div>
+      </div>
+
+      <template id="sg-flowerTemplate">
+        <button class="sg-flower" type="button">
+          <span class="sg-flower-head" aria-hidden="true">
+            <span class="sg-petal sg-petal-1"></span>
+            <span class="sg-petal sg-petal-2"></span>
+            <span class="sg-petal sg-petal-3"></span>
+            <span class="sg-petal sg-petal-4"></span>
+            <span class="sg-petal sg-petal-5"></span>
+            <span class="sg-flower-center"></span>
+          </span>
+          <span class="sg-stem" aria-hidden="true"></span>
+          <span class="sg-song-tooltip"></span>
+        </button>
+      </template>
+    </section>
+
+    <section class="canvas-panel chat-panel" id="garden-agent">
+      <div class="panel-copy">
+        <div>
+          <h2>CANVAS 10 / GARDEN AGENT</h2>
+          <p>A flower-site chatbot powered by OpenAI, with optional Firebase sync for shared messages.</p>
+        </div>
+        <p class="sg-live-status">
+          <span class="sg-status-dot" aria-hidden="true"></span>
+          <span id="ga-connection" class="ga-pill is-demo">Demo mode</span>
+        </p>
+      </div>
+
+      <div class="ga-shell">
+        <aside class="ga-aside">
+          <p class="ga-kicker">Guide of the field</p>
+          <h3>Ask the garden about bloom, kindness, and the canvases.</h3>
+          <p>
+            Try: “When do daisies peak in Italy?”, “What is Sound Garden?”, or “Why flowers as kindness?”
+          </p>
+          <div class="ga-meta">
+            <p id="ga-status" class="ga-status" role="status" aria-live="polite">Starting…</p>
+          </div>
+        </aside>
+
+        <div class="ga-chat">
+          <div id="ga-messages" class="ga-messages" aria-live="polite"></div>
+          <div class="ga-composer">
+            <label class="visually-hidden" for="ga-input">Message</label>
+            <textarea
+              id="ga-input"
+              rows="2"
+              maxlength="500"
+              placeholder="Write to Garden Agent…"
+            ></textarea>
+            <button id="ga-send" type="button">SEND</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Each canvas sketch is saved in its own separate JavaScript file. -->
+  <script>
+    (() => {
+      const data = [
+        { month: 1, label: "Gen", observations: 58, share: 0.0387, bloomScore: 0.127 },
+        { month: 2, label: "Feb", observations: 179, share: 0.1195, bloomScore: 0.391 },
+        { month: 3, label: "Mar", observations: 327, share: 0.2183, bloomScore: 0.714 },
+        { month: 4, label: "Apr", observations: 458, share: 0.3057, bloomScore: 1 },
+        { month: 5, label: "Mag", observations: 258, share: 0.1722, bloomScore: 0.563 },
+        { month: 6, label: "Giu", observations: 69, share: 0.0461, bloomScore: 0.151 },
+        { month: 7, label: "Lug", observations: 35, share: 0.0234, bloomScore: 0.076 },
+        { month: 8, label: "Ago", observations: 14, share: 0.0093, bloomScore: 0.031 },
+        { month: 9, label: "Set", observations: 19, share: 0.0127, bloomScore: 0.041 },
+        { month: 10, label: "Ott", observations: 28, share: 0.0187, bloomScore: 0.061 },
+        { month: 11, label: "Nov", observations: 15, share: 0.01, bloomScore: 0.033 },
+        { month: 12, label: "Dic", observations: 38, share: 0.0254, bloomScore: 0.083 }
+      ];
+
+      const svg = d3.select("#flower-timeline");
+      const margin = { top: 36, right: 38, bottom: 52, left: 58 };
+      const defs = svg.append("defs");
+      const petalGradient = defs.append("radialGradient")
+        .attr("id", "timelinePetalGradient")
+        .attr("cx", "35%")
+        .attr("cy", "28%")
+        .attr("r", "75%");
+      petalGradient.append("stop").attr("offset", "0%").attr("stop-color", "#ffffff");
+      petalGradient.append("stop").attr("offset", "45%").attr("stop-color", "#ffb8ec");
+      petalGradient.append("stop").attr("offset", "100%").attr("stop-color", "#ff9adf");
+
+      function renderTimeline() {
+        const bounds = svg.node().getBoundingClientRect();
+        const width = Math.max(320, bounds.width);
+        const height = Math.max(420, bounds.height || 480);
+        svg.attr("viewBox", `0 0 ${width} ${height}`);
+        svg.selectAll(".timeline-plot").remove();
+
+        const plot = svg.append("g").attr("class", "timeline-plot");
+        const innerWidth = width - margin.left - margin.right;
+        const innerHeight = height - margin.top - margin.bottom;
+
+        const x = d3.scaleBand()
+          .domain(data.map(d => d.label))
+          .range([margin.left, margin.left + innerWidth])
+          .padding(0.28);
+
+        const y = d3.scaleLinear()
+          .domain([0, d3.max(data, d => d.observations)]).nice()
+          .range([margin.top + innerHeight, margin.top]);
+
+        const yScore = d3.scaleLinear()
+          .domain([0, 1])
+          .range([margin.top + innerHeight, margin.top]);
+
+        plot.append("g")
+          .attr("class", "timeline-grid")
+          .attr("transform", `translate(${margin.left},0)`)
+          .call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth).tickFormat(""))
+          .call(g => g.select(".domain").remove());
+
+        plot.append("g")
+          .attr("class", "timeline-axis")
+          .attr("transform", `translate(0,${margin.top + innerHeight})`)
+          .call(d3.axisBottom(x).tickSizeOuter(0));
+
+        plot.append("g")
+          .attr("class", "timeline-axis")
+          .attr("transform", `translate(${margin.left},0)`)
+          .call(d3.axisLeft(y).ticks(5));
+
+        plot.selectAll("rect.timeline-bar")
+          .data(data)
+          .join("rect")
+          .attr("class", d => d.observations < 40 ? "timeline-bar is-low" : "timeline-bar")
+          .attr("x", d => x(d.label))
+          .attr("y", d => y(d.observations))
+          .attr("width", x.bandwidth())
+          .attr("height", d => y(0) - y(d.observations));
+
+        const line = d3.line()
+          .x(d => x(d.label) + x.bandwidth() / 2)
+          .y(d => yScore(d.bloomScore))
+          .curve(d3.curveCatmullRom.alpha(0.45));
+
+        plot.append("path")
+          .datum(data)
+          .attr("class", "timeline-line")
+          .attr("d", line);
+
+        const flowers = plot.selectAll("g.timeline-flower")
+          .data(data)
+          .join("g")
+          .attr("class", "timeline-flower")
+          .attr("transform", d => `translate(${x(d.label) + x.bandwidth() / 2},${yScore(d.bloomScore)})`);
+
+        flowers.each(function(d) {
+          const g = d3.select(this);
+          const petalLength = 7 + d.bloomScore * 10;
+          const petalWidth = 2.6 + d.bloomScore * 2.2;
+          g.selectAll("ellipse.timeline-petal")
+            .data(d3.range(10))
+            .join("ellipse")
+            .attr("class", "timeline-petal")
+            .attr("cx", 0)
+            .attr("cy", -petalLength * 0.55)
+            .attr("rx", petalWidth)
+            .attr("ry", petalLength)
+            .attr("transform", p => `rotate(${p * 36})`);
+        });
+
+        flowers.append("circle")
+          .attr("class", "timeline-core")
+          .attr("r", d => 3 + d.bloomScore * 4);
+
+        plot.append("text")
+          .attr("class", "timeline-label")
+          .attr("x", margin.left)
+          .attr("y", 20)
+          .text("Conteggio osservazioni");
+
+        plot.append("text")
+          .attr("class", "timeline-label")
+          .attr("x", width - margin.right)
+          .attr("y", 20)
+          .attr("text-anchor", "end")
+          .text("Indice 0-1");
+      }
+
+      renderTimeline();
+      window.addEventListener("resize", renderTimeline);
+    })();
+  </script>
+  <script src="js/relational-network.js?v=20260810-pink"></script>
+  <script src="js/mapbox-bloom.js?v=20260810-pink"></script>
+  <script src="js/daisy-globe.js?v=20260810-pink"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+  <script src="js/sound-garden.js?v=20260810-pink"></script>
+  <script src="js/garden-agent.local.js"></script>
+  <script src="js/garden-agent.js?v=20260810-canvas10"></script>
+  <script src="js/3DCanvas_1.js?v=20260810-darker-flowers"></script>
+  <script src="js/3DCanvas_2.js?v=20260810-soft-light"></script>
+  <script src="js/2DCanvas_1.js?v=20260810-pink"></script>
+  <script src="js/2DCanvas_2.js?v=20260810-pink"></script>
+</body>
+</html>

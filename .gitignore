@@ -1,0 +1,7 @@
+# Secrets / local config — never push API keys
+WEBSITE/js/garden-agent.local.js
+**/garden-agent.local.js
+.env
+.env.*
+*.pem
+API KEY.gdoc
