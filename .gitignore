@@ -6,3 +6,11 @@ projects/those-flowers/js/garden-agent.local.js
 *.pem
 API KEY.gdoc
 **/API KEY.gdoc
+
+# Local archive of files outside the CV
+/da eliminare/
+
+# Local system files, Office locks, and original project media
+.DS_Store
+~$*
+/data/images/
