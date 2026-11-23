@@ -10,19 +10,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&amp;display=swap" />
-  <link rel="stylesheet" href="cv.css?v=guestbook" />
+  <link rel="stylesheet" href="cv.css?v=guestbook-editor" />
   <script src="js/cv.js?v=draggable-thesis-book" defer></script>
   <script src="js/vendor/mammoth-1.13.0.min.js" defer></script>
   <script src="js/vendor/jszip.min.js" defer></script>
   <script src="js/project-word.js?v=project-04-award-at-end" defer></script>
-  <script src="js/guestbook.js?v=shared" defer></script>
+  <script src="js/guestbook.js?v=guestbook-editor" defer></script>
 </head>
 <body>
   <main class="cv-page">
     <header class="cv-header">
       <div class="title-block">
         <h1>Michelle<br />Nuccio</h1>
-        <button class="guestbook-tab" type="button" aria-haspopup="dialog" aria-controls="guestbook">Guestbook</button>
       </div>
       <div class="cv-profile">
         <p class="cv-intro">I’m an artist, computational designer, and data-driven researcher. I love the internet: its strange corners, unexpected connections, and endless possibilities for sharing ideas. I work with research, data, and code, and I’m exploring the interface as a creative language for expression, storytelling, and experimentation.</p>
@@ -242,33 +241,60 @@
                 <div class="project-document" tabindex="0" role="region" aria-label="Agenda Urbana Brescia 2050 document"
                   data-document="data/progetto-01.docx" inert>Loading project…</div>
               </article>
+              <article class="project-card" aria-label="Guestbook">
+                <div class="project-document" id="guestbook" tabindex="0" role="region"
+                  aria-labelledby="guestbook-title" inert>
+                  <header class="guestbook-header">
+                    <h2 class="guestbook-title" id="guestbook-title">Guestbook</h2>
+                    <button class="guestbook-jump" type="button">Read entries</button>
+                  </header>
+                  <form class="guestbook-form">
+                    <div class="guestbook-note-sheet">
+                      <label for="guestbook-note">Write a note</label>
+                      <textarea id="guestbook-note" rows="3" maxlength="600" placeholder="Say hi :)"></textarea>
+                    </div>
+                    <div class="guestbook-drawing">
+                      <div class="guestbook-tools" role="group" aria-label="Drawing tools">
+                        <div class="guestbook-tool-group">
+                          <button type="button" data-tool="pen" aria-pressed="true">Pen</button>
+                          <button type="button" data-tool="eraser" aria-pressed="false">Eraser</button>
+                        </div>
+                        <label class="guestbook-tool-group">
+                          Ink <input type="color" value="#080808" aria-label="Pen colour" />
+                        </label>
+                        <label class="guestbook-tool-group">
+                          Size <select aria-label="Stroke size">
+                            <option value="2">Fine</option>
+                            <option value="4" selected>Medium</option>
+                            <option value="9">Broad</option>
+                          </select>
+                        </label>
+                        <div class="guestbook-tool-group">
+                          <button type="button" data-undo-drawing disabled>Undo</button>
+                          <button type="button" data-clear-drawing>Clear</button>
+                        </div>
+                      </div>
+                      <canvas class="guestbook-canvas" width="620" height="190" aria-label="Drawing canvas"></canvas>
+                    </div>
+                    <div class="guestbook-actions">
+                      <p class="guestbook-status" role="status">Notes and drawings are public.</p>
+                      <button type="submit">Post</button>
+                    </div>
+                  </form>
+                  <section class="guestbook-public" aria-labelledby="guestbook-public-title">
+                    <h3 id="guestbook-public-title" tabindex="-1">Notes &amp; drawings</h3>
+                    <p class="guestbook-empty" hidden>No entries yet.</p>
+                    <ul class="guestbook-entries"></ul>
+                    <button class="guestbook-more" type="button" hidden>Older entries</button>
+                  </section>
+                </div>
+              </article>
             </div>
             <div class="project-scroll-track" aria-hidden="true"></div>
           </div>
         </div>
       </section>
     </div>
-
-    <dialog class="guestbook-dialog" id="guestbook" aria-labelledby="guestbook-title">
-      <div class="guestbook-heading">
-        <h2 id="guestbook-title">Guestbook</h2>
-        <form method="dialog">
-          <button class="guestbook-close" type="submit" aria-label="Close guestbook">×</button>
-        </form>
-      </div>
-      <form class="guestbook-form">
-        <label for="guestbook-note">Leave a note, a doodle, or just say hi :)</label>
-        <textarea id="guestbook-note" rows="3" maxlength="600"></textarea>
-        <canvas class="guestbook-canvas" width="620" height="190" aria-label="Drawing canvas"></canvas>
-        <div class="guestbook-actions">
-          <button type="button" data-clear-drawing>Clear drawing</button>
-          <button type="submit">Post</button>
-        </div>
-        <p class="guestbook-status" role="status">Saved notes and drawings are public.</p>
-      </form>
-      <ul class="guestbook-entries" aria-label="Public guestbook entries"></ul>
-      <button class="guestbook-more" type="button" hidden>Older entries</button>
-    </dialog>
 
     <!-- experience-dialogs:start -->
     <dialog class="event-dialog" id="cv-experience-2" aria-labelledby="cv-experience-2-title">
