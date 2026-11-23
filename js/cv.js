@@ -37,6 +37,49 @@ projectGallery.addEventListener("scroll", positionProjectCards, { passive: true 
 new ResizeObserver(positionProjectCards).observe(projectGallery);
 positionProjectCards();
 
+const thesisBook = projectGallery.querySelector(".thesis-book-button");
+let bookYaw = 26;
+let bookPitch = 10;
+let bookDrag;
+
+function rotateThesisBook(yaw, pitch = bookPitch) {
+  bookYaw = yaw;
+  bookPitch = Math.max(-30, Math.min(30, pitch));
+  thesisBook.style.setProperty("--book-yaw", `${bookYaw}deg`);
+  thesisBook.style.setProperty("--book-pitch", `${bookPitch}deg`);
+}
+
+thesisBook.addEventListener("pointerdown", (event) => {
+  if (!event.isPrimary || event.button !== 0) return;
+  bookDrag = { id: event.pointerId, x: event.clientX, y: event.clientY, yaw: bookYaw, pitch: bookPitch };
+  thesisBook.setPointerCapture(event.pointerId);
+  thesisBook.classList.add("is-dragging");
+});
+
+thesisBook.addEventListener("pointermove", (event) => {
+  if (event.pointerId !== bookDrag?.id) return;
+  rotateThesisBook(
+    bookDrag.yaw + (event.clientX - bookDrag.x) * 0.8,
+    bookDrag.pitch - (event.clientY - bookDrag.y) * 0.3
+  );
+});
+
+thesisBook.addEventListener("lostpointercapture", (event) => {
+  if (event.pointerId !== bookDrag?.id) return;
+  bookDrag = undefined;
+  thesisBook.classList.remove("is-dragging");
+});
+
+thesisBook.addEventListener("keydown", (event) => {
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  event.preventDefault();
+  rotateThesisBook(bookYaw + (event.key === "ArrowRight" ? 30 : -30));
+});
+
+thesisBook.addEventListener("click", (event) => {
+  if (event.detail === 0) rotateThesisBook(bookYaw + 180);
+});
+
 const eventTriggerGroups = new Map();
 document.querySelectorAll(".event-trigger").forEach((projectTrigger) => {
   const dialogId = projectTrigger.getAttribute("aria-controls");

@@ -136,6 +136,8 @@
   }
 
   document.querySelectorAll(".project-document[data-document]").forEach((preview) => {
+    const content = preview.querySelector(".project-word-content") || preview;
+    const details = preview.querySelector(".project-word-details");
     const linkedVideos = Object.entries(JSON.parse(preview.dataset.videos || "{}"));
     let lastDocument;
     let rendered = false;
@@ -163,12 +165,30 @@
         const normalized = linkedVideos.length ? await labelVideoPosters(arrayBuffer, linkedVideos) : arrayBuffer;
         const { value } = await convertProject(normalized);
         const scrollTop = preview.scrollTop;
-        preview.replaceChildren(projectContent(value, preview.dataset.video, linkedVideos, preview.dataset.videoAfterCredits));
+        const fragment = projectContent(value, preview.dataset.video, linkedVideos, preview.dataset.videoAfterCredits);
+        if (details) {
+          const introduction = fragment.firstElementChild;
+          const award = Array.from(fragment.children).find(element =>
+            /^%\s*Special Mention for Research\b/i.test(element.textContent.trim())
+          );
+          const firstLineBreak = introduction?.querySelector("br");
+          if (firstLineBreak && firstLineBreak.nextSibling?.nodeName !== "BR") {
+            firstLineBreak.after(document.createElement("br"));
+          }
+          content.replaceChildren(...(introduction ? [introduction] : []));
+          if (award && award !== introduction) {
+            award.classList.add("project-award-line");
+            fragment.appendChild(award);
+          }
+          details.replaceChildren(fragment);
+        } else {
+          content.replaceChildren(fragment);
+        }
         preview.scrollTop = scrollTop;
         lastDocument = bytes;
         rendered = true;
       } catch (error) {
-        if (!rendered) preview.textContent = `The project document could not be loaded. ${error.message}`;
+        if (!rendered) content.textContent = `The project document could not be loaded. ${error.message}`;
         console.warn("Unable to preview " + preview.dataset.document, error);
       } finally {
         loading = false;

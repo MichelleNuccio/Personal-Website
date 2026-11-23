@@ -10,17 +10,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&amp;display=swap" />
-  <link rel="stylesheet" href="cv.css?v=native-video-controls" />
-  <script src="js/cv.js?v=project-02" defer></script>
+  <link rel="stylesheet" href="cv.css?v=guestbook" />
+  <script src="js/cv.js?v=draggable-thesis-book" defer></script>
   <script src="js/vendor/mammoth-1.13.0.min.js" defer></script>
   <script src="js/vendor/jszip.min.js" defer></script>
-  <script src="js/project-word.js?v=sonic-tomography-first" defer></script>
+  <script src="js/project-word.js?v=project-04-award-at-end" defer></script>
+  <script src="js/guestbook.js?v=shared" defer></script>
 </head>
 <body>
   <main class="cv-page">
     <header class="cv-header">
       <div class="title-block">
         <h1>Michelle<br />Nuccio</h1>
+        <button class="guestbook-tab" type="button" aria-haspopup="dialog" aria-controls="guestbook">Guestbook</button>
+      </div>
+      <div class="cv-profile">
+        <p class="cv-intro">I’m an artist, computational designer, and data-driven researcher. I love the internet: its strange corners, unexpected connections, and endless possibilities for sharing ideas. I work with research, data, and code, and I’m exploring the interface as a creative language for expression, storytelling, and experimentation.</p>
+        <div class="cv-contacts">
+          <span>mail: <a href="mailto:nucciomichelle@icloud.com">nucciomichelle@icloud.com</a></span>
+          <span>IG: <a href="https://www.instagram.com/michelle_nuccio/">@michelle_nuccio</a></span>
+        </div>
       </div>
     </header>
     <div class="welcome-band" tabindex="0">
@@ -192,29 +201,74 @@
         <div class="project-gallery-frame">
           <div class="project-gallery" role="region" tabindex="0" aria-label="Projects">
             <div class="project-stage">
-              <article class="project-card" aria-label="Project 01">
-                <div class="project-document" tabindex="0" role="region" aria-label="Project 01 document"
-                  data-document="data/progetto-01.docx">Loading project…</div>
+              <article class="project-card" aria-label="Maru. Mare Debole">
+                <div class="project-document" tabindex="0" role="region" aria-label="Maru. Mare Debole document"
+                  data-document="data/progetto-02.docx" data-video="data/videos/mare-debole.mp4">Loading project…</div>
               </article>
-              <article class="project-card" aria-label="Project 02">
-                <div class="project-document" tabindex="0" role="region" aria-label="Project 02 document"
-                  data-document="data/progetto-02.docx" data-video="data/videos/mare-debole.mp4" inert>Loading project…</div>
-              </article>
-              <article class="project-card" aria-label="Project 03">
-                <div class="project-document" tabindex="0" role="region" aria-label="Project 03 document"
+              <article class="project-card" aria-label="Ec(h)o-es in the Rings">
+                <div class="project-document" tabindex="0" role="region" aria-label="Ec(h)o-es in the Rings document"
                   data-document="data/progetto-03.docx"
                   data-videos='{"BAWV_Installazione digitale.mp4":"data/videos/bolzano-installazione.mp4?v=1080p","Progetto03 Scan.mov":{"src":"data/videos/bolzano-scan.mp4?v=new-scan-1080","poster":"data/videos/bolzano-scan.jpg?v=new-scan","afterParagraph":"Sonic Tomography."}}'
                   data-video-after-credits="BAWV_Installazione digitale.mp4"
                   inert>Loading project…</div>
               </article>
-              <div class="project-card"></div>
-              <div class="project-card"></div>
+              <article class="project-card" aria-label="Left(L)overs">
+                <div class="project-document" tabindex="0" role="region" aria-label="Left(L)overs document"
+                  data-document="data/progetto-04.docx" inert>
+                  <div class="project-word-content">Loading project…</div>
+                  <button class="thesis-book-button" type="button"
+                    aria-label="Rotate Left(L)overs with the mouse or arrow keys">
+                    <span class="thesis-book-scene" aria-hidden="true">
+                      <span class="thesis-book">
+                        <img class="thesis-book-face thesis-book-front" src="data/covers/leftlovers-front.png" alt="" />
+                        <img class="thesis-book-face thesis-book-back" src="data/covers/leftlovers-back.png" alt="" />
+                        <span class="thesis-book-face thesis-book-spine">
+                          <span class="thesis-book-stitch"></span>
+                          <span class="thesis-book-stitch"></span>
+                          <span class="thesis-book-stitch"></span>
+                          <span class="thesis-book-stitch"></span>
+                          <span class="thesis-book-stitch"></span>
+                        </span>
+                        <span class="thesis-book-face thesis-book-pages"></span>
+                        <span class="thesis-book-face thesis-book-top"></span>
+                        <span class="thesis-book-face thesis-book-bottom"></span>
+                      </span>
+                    </span>
+                  </button>
+                  <div class="project-word-details"></div>
+                </div>
+              </article>
+              <article class="project-card" aria-label="Agenda Urbana Brescia 2050">
+                <div class="project-document" tabindex="0" role="region" aria-label="Agenda Urbana Brescia 2050 document"
+                  data-document="data/progetto-01.docx" inert>Loading project…</div>
+              </article>
             </div>
             <div class="project-scroll-track" aria-hidden="true"></div>
           </div>
         </div>
       </section>
     </div>
+
+    <dialog class="guestbook-dialog" id="guestbook" aria-labelledby="guestbook-title">
+      <div class="guestbook-heading">
+        <h2 id="guestbook-title">Guestbook</h2>
+        <form method="dialog">
+          <button class="guestbook-close" type="submit" aria-label="Close guestbook">×</button>
+        </form>
+      </div>
+      <form class="guestbook-form">
+        <label for="guestbook-note">Leave a note, a doodle, or just say hi :)</label>
+        <textarea id="guestbook-note" rows="3" maxlength="600"></textarea>
+        <canvas class="guestbook-canvas" width="620" height="190" aria-label="Drawing canvas"></canvas>
+        <div class="guestbook-actions">
+          <button type="button" data-clear-drawing>Clear drawing</button>
+          <button type="submit">Post</button>
+        </div>
+        <p class="guestbook-status" role="status">Saved notes and drawings are public.</p>
+      </form>
+      <ul class="guestbook-entries" aria-label="Public guestbook entries"></ul>
+      <button class="guestbook-more" type="button" hidden>Older entries</button>
+    </dialog>
 
     <!-- experience-dialogs:start -->
     <dialog class="event-dialog" id="cv-experience-2" aria-labelledby="cv-experience-2-title">

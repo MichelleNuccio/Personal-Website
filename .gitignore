@@ -14,3 +14,6 @@ API KEY.gdoc
 .DS_Store
 ~$*
 /data/images/
+
+# The guestbook service has its own Sites repository
+/guestbook-service/

@@ -25,10 +25,24 @@ GitHub Pages serves the generated CV as a static page.
 2. Save the workbook and run `python3 scripts/update_cv.py` from the repository root.
 3. Preview `cv.html` and commit both the workbook and the updated HTML when ready to push.
 
-## Preview Projects 01, 02 and 03
+## Preview the projects
 
-Open `cv.html` through a local HTTP server, then edit and save
-`data/progetto-01.docx`, `data/progetto-02.docx`, or `data/progetto-03.docx`. The corresponding card refreshes within about two seconds while
+The gallery shows the projects in this order.
+
+1. Maru. Mare Debole (`data/progetto-02.docx`)
+2. Ec(h)o-es in the Rings (`data/progetto-03.docx`)
+3. Left(L)overs (`data/progetto-04.docx`)
+4. Agenda Urbana Brescia 2050 (`data/progetto-01.docx`)
+
+Open `cv.html` through a local HTTP server. When you save a project document,
+its card refreshes within about two seconds while
 the preview tab is visible. The preview converts headings, text, lists, tables,
 links and supported images to web content. Word-specific layout and animations
 are not converted.
+
+## Public guestbook
+
+The guestbook in `cv.html` loads and posts public entries through the
+`michelle-nuccio-guestbook` Sites service. The website remains on GitHub Pages.
+The separate service repository is checked out locally in `guestbook-service/`.
+It stores entries in its D1 database.

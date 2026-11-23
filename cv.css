@@ -43,15 +43,181 @@ a {
 .cv-header {
   position: relative;
   z-index: 3;
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-content: center;
+  gap: clamp(24px, 4vw, 64px);
   min-height: 390px;
   padding: 58px 0 42px;
   isolation: isolate;
 }
 
 .title-block {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(8px, 1vw, 16px);
   position: relative;
   z-index: 1;
+}
+
+.guestbook-tab {
+  order: -1;
+  align-self: stretch;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  padding: 0.65rem 0.42rem;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.guestbook-tab:focus-visible {
+  outline: 2px solid var(--line);
+  outline-offset: -4px;
+}
+
+.guestbook-dialog {
+  width: min(660px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: clamp(16px, 4vw, 28px);
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.guestbook-dialog::backdrop {
+  background: rgb(0 0 0 / 58%);
+}
+
+.guestbook-heading,
+.guestbook-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.guestbook-heading h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.guestbook-close {
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 1.75rem;
+  cursor: pointer;
+}
+
+.guestbook-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.guestbook-form textarea,
+.guestbook-canvas {
+  width: 100%;
+  border: 1px solid var(--grid-line, #a0a0a0);
+  background: #fff;
+  color: var(--ink);
+}
+
+.guestbook-form textarea {
+  resize: vertical;
+  padding: 8px;
+  font: inherit;
+}
+
+.guestbook-canvas {
+  display: block;
+  height: auto;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.guestbook-actions button,
+.guestbook-more {
+  padding: 7px 12px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.guestbook-actions button[type="submit"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.guestbook-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.guestbook-entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guestbook-more {
+  margin-top: 16px;
+}
+
+.guestbook-entries li {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #a0a0a0;
+  overflow-wrap: anywhere;
+}
+
+.guestbook-entries p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.guestbook-entries img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 8px;
+}
+
+.cv-profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cv-contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 1rem;
+}
+
+.cv-contacts a {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.cv-intro {
+  max-width: 42ch;
+  margin: 0;
+  font-size: clamp(1rem, 1.35vw, 1.25rem);
+  line-height: 1.55;
 }
 
 h1 {
@@ -171,7 +337,7 @@ h1 {
 }
 
 .project-scroll-track {
-  height: 240%;
+  height: 180%;
 }
 
 .project-card {
@@ -213,8 +379,181 @@ h1 {
   height: auto;
 }
 
-.project-document > :first-child {
+.project-document > :first-child,
+.project-word-content > :first-child {
   margin-top: 0;
+}
+
+.project-award-line {
+  font: inherit;
+  margin: 1em 0;
+}
+
+.thesis-book-button {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  margin-block: 1lh;
+  padding: 20px 0 10px;
+  border: 0;
+  background: #000;
+  color: var(--ink);
+  font-size: inherit;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.thesis-book-button:focus-visible {
+  outline: 2px solid var(--line);
+  outline-offset: -2px;
+}
+
+.thesis-book-scene {
+  display: block;
+  width: min(54%, 218px);
+  aspect-ratio: 964 / 1376;
+  perspective: 850px;
+}
+
+@property --book-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes thesis-book-spin {
+  to { --book-spin: 360deg; }
+}
+
+.thesis-book {
+  --book-depth: clamp(12px, 3vw, 23px);
+  --book-half-depth: calc(var(--book-depth) / 2);
+  --book-wire: #aeb2ba;
+  --paper-edges: repeating-linear-gradient(90deg, #f0ede5 0 1px, #fcfaf5 1px 3px);
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: rotateX(var(--book-pitch, 10deg)) rotateY(calc(var(--book-yaw, 26deg) + var(--book-spin, 0deg)));
+  transform-style: preserve-3d;
+  animation: thesis-book-spin 24s linear infinite;
+  animation-play-state: paused;
+  transition: transform 720ms cubic-bezier(0.25, 0.7, 0.3, 1);
+}
+
+.project-document:not([inert]) .thesis-book-button:not(.is-dragging):not(:focus-visible) .thesis-book {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thesis-book {
+    animation: none;
+  }
+}
+
+.thesis-book-button.is-dragging {
+  cursor: grabbing;
+}
+
+.thesis-book-button.is-dragging .thesis-book {
+  transition: none;
+}
+
+.thesis-book img {
+  pointer-events: none;
+}
+
+.thesis-book-face {
+  position: absolute;
+  display: block;
+  backface-visibility: hidden;
+  outline: 0.5px solid var(--book-wire);
+}
+
+.thesis-book .thesis-book-front,
+.thesis-book .thesis-book-back {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0.5px solid var(--book-wire);
+}
+
+.thesis-book-front {
+  transform: translateZ(var(--book-half-depth));
+}
+
+.thesis-book-back {
+  transform: rotateY(180deg) translateZ(var(--book-half-depth));
+}
+
+.thesis-book-spine,
+.thesis-book-pages {
+  top: 0;
+  width: var(--book-depth);
+  height: 100%;
+}
+
+.thesis-book-spine {
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 12%;
+  background: repeating-linear-gradient(90deg, #d9d1c1 0 1px, #fffaf0 1px 3px);
+  transform: translateX(-50%) rotateY(-90deg);
+}
+
+.thesis-book-stitch {
+  position: relative;
+  width: 90%;
+  height: 5px;
+  background: radial-gradient(circle at 2px 50%, #776d5c 0 1px, transparent 1.3px) repeat-x;
+  background-size: 4px 5px;
+}
+
+.thesis-book-stitch::after {
+  position: absolute;
+  inset: 1px 1px 0;
+  border-top: 1px solid #161750;
+  border-bottom: 1px dashed #161750;
+  border-radius: 50%;
+  transform: rotate(-7deg);
+  content: "";
+}
+
+.thesis-book-stitch:nth-child(even)::after {
+  transform: rotate(7deg);
+}
+
+.thesis-book-pages {
+  left: 100%;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 20px, #676c7538 20px 21px),
+    var(--paper-edges);
+  transform: translateX(-50%) rotateY(90deg);
+}
+
+.thesis-book-top,
+.thesis-book-bottom {
+  left: 0;
+  width: 100%;
+  height: var(--book-depth);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 20px, #676c7538 20px 21px),
+    repeating-linear-gradient(0deg, #f0ede5 0 1px, #fcfaf5 1px 3px);
+}
+
+.thesis-book-top {
+  top: 0;
+  transform: translateY(-50%) rotateX(90deg);
+}
+
+.thesis-book-bottom {
+  top: 100%;
+  transform: translateY(-50%) rotateX(-90deg);
 }
 
 .project-card:not(:first-child) {
@@ -460,6 +799,13 @@ h1 {
   font-size: 12px;
 }
 
+@media (max-width: 1100px) {
+  .cv-header {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+}
+
 @media (max-width: 900px) {
   .cv-workspace {
     grid-template-columns: minmax(0, 1fr);
@@ -475,6 +821,19 @@ h1 {
 }
 
 @media (max-width: 700px) {
+  .title-block {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .guestbook-tab {
+    order: 0;
+    align-self: flex-start;
+    padding: 0.5rem 0.65rem;
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
   .cv-page {
     width: calc(100% - 36px);
     padding-top: 16px;
