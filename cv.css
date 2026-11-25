@@ -6,7 +6,7 @@
   --line: #31ff00;
   --accent: #080808;
   --month-grid: none;
-  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-family: system-ui, sans-serif;
   font-weight: 300;
 }
 

@@ -34,9 +34,10 @@ The gallery shows the projects in this order.
 3. Left(L)overs (`data/progetto-04.docx`)
 4. Agenda Urbana Brescia 2050 (`data/progetto-01.docx`)
 
-Open `cv.html` through a local HTTP server. When you save a project document,
-its card refreshes within about two seconds while
-the preview tab is visible. The preview converts headings, text, lists, tables,
+Open `cv.html` through a local HTTP server. The site loads each project when
+its card becomes active in the visible gallery. On localhost, the active card
+checks for changes about every two seconds while the preview tab is visible.
+The preview converts headings, text, lists, tables,
 links and supported images to web content. Word-specific layout and animations
 are not converted.
 

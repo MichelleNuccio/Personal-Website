@@ -19,7 +19,8 @@ function positionProjectCards() {
     const offset = index - activePosition;
     const distance = Math.abs(offset);
     const preview = projectDocuments[index];
-    if (preview) preview.inert = index !== Math.round(activePosition);
+    const inactive = index !== Math.round(activePosition);
+    if (preview && preview.inert !== inactive) preview.inert = inactive;
     const tilt = -Math.sign(offset) * Math.min(66, distance * 66);
     const spacing = Math.min(distance, 1) * firstPlaneDistance
       + Math.max(0, distance - 1) * stackedPlaneGap;

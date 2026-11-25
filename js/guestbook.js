@@ -34,6 +34,8 @@
       const image = document.createElement("img");
       image.src = entry.drawing;
       image.alt = "Guestbook doodle";
+      image.loading = "lazy";
+      image.decoding = "async";
       item.append(image);
     }
     return item;
@@ -48,7 +50,7 @@
     if (before !== null) url.searchParams.set("before", before);
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { credentials: "omit" });
       if (!response.ok) throw new Error("Public entries could not be loaded.");
       const { entries, nextBefore: nextPage } = await response.json();
       const items = entries.map(entryElement);
@@ -165,6 +167,7 @@
     try {
       const response = await fetch(endpoint, {
         method: "POST",
+        credentials: "omit",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entry)
       });

@@ -1,4 +1,25 @@
 (() => {
+  const localPreview = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+  const scriptLoads = new Map();
+
+  function loadScript(path) {
+    if (!scriptLoads.has(path)) {
+      const script = document.createElement("script");
+      script.src = path;
+      const loaded = new Promise((resolve, reject) => {
+        script.onload = resolve;
+        script.onerror = () => {
+          script.remove();
+          scriptLoads.delete(path);
+          reject(new Error("The local Word converter did not load."));
+        };
+        document.head.append(script);
+      });
+      scriptLoads.set(path, loaded);
+    }
+    return scriptLoads.get(path);
+  }
+
   const allowedElements = new Set([
     "A", "BLOCKQUOTE", "BR", "CAPTION", "CODE", "DEL", "DIV", "EM", "H1", "H2", "H3",
     "H4", "H5", "H6", "HR", "IMG", "LI", "OL", "P", "PRE", "SPAN", "STRONG", "SUB",
@@ -20,6 +41,10 @@
         if (!link && !image && !["alt", "colspan", "rowspan", "start"].includes(name)) {
           element.removeAttribute(name);
         }
+      }
+      if (element.tagName === "IMG") {
+        element.loading = "lazy";
+        element.decoding = "async";
       }
     });
     const paragraphs = Array.from(template.content.querySelectorAll("p"));
@@ -69,7 +94,6 @@
     const video = document.createElement("video");
     video.controls = true;
     video.loop = true;
-    video.autoplay = true;
     video.defaultMuted = true;
     video.muted = true;
     video.playsInline = true;
@@ -135,30 +159,54 @@
     }
   }
 
-  document.querySelectorAll(".project-document[data-document]").forEach((preview) => {
+  const gallery = document.querySelector(".project-gallery");
+  let galleryVisible = false;
+  const activateProjects = [];
+  const refreshProjects = [];
+
+  gallery.querySelectorAll(".project-document[data-document]").forEach((preview) => {
     const content = preview.querySelector(".project-word-content") || preview;
     const details = preview.querySelector(".project-word-details");
     const linkedVideos = Object.entries(JSON.parse(preview.dataset.videos || "{}"));
+    let lastVersion;
     let lastDocument;
     let rendered = false;
     let loading = false;
 
+    function documentVersion(response) {
+      const etag = response.headers.get("ETag");
+      const modified = response.headers.get("Last-Modified");
+      const size = response.headers.get("Content-Length");
+      return etag || (modified && size ? `${modified}/${size}` : null);
+    }
+
     async function refreshProject() {
-      if (loading) return;
+      if (loading || !galleryVisible || document.hidden || preview.inert || (rendered && !localPreview)) {
+        return;
+      }
       loading = true;
       try {
         if (location.protocol === "file:") {
           throw new Error("Open the CV through Live Server to load the Word document.");
         }
-        if (!window.mammoth) {
-          throw new Error("The local Word converter did not load.");
+        if (localPreview && lastVersion) {
+          const check = await fetch(preview.dataset.document, { method: "HEAD", cache: "no-store" });
+          if (check.ok && documentVersion(check) === lastVersion) return;
         }
-        const response = await fetch(preview.dataset.document, { cache: "no-store" });
+        const [response] = await Promise.all([
+          fetch(preview.dataset.document, { cache: localPreview ? "no-store" : "default" }),
+          loadScript("js/vendor/mammoth-1.13.0.min.js"),
+          loadScript("js/vendor/jszip.min.js")
+        ]);
         if (!response.ok) throw new Error(`The Word file returned HTTP ${response.status}.`);
 
         const arrayBuffer = await response.arrayBuffer();
         const bytes = new Uint8Array(arrayBuffer);
-        if (bytes.length === lastDocument?.length && bytes.every((byte, index) => byte === lastDocument[index])) {
+        const version = documentVersion(response);
+        if (lastDocument && bytes.length === lastDocument.length
+          && bytes.every((byte, index) => byte === lastDocument[index])) {
+          lastVersion = version;
+          if (version) lastDocument = undefined;
           return;
         }
 
@@ -185,7 +233,8 @@
           content.replaceChildren(fragment);
         }
         preview.scrollTop = scrollTop;
-        lastDocument = bytes;
+        lastVersion = version;
+        lastDocument = localPreview && !version ? bytes : undefined;
         rendered = true;
       } catch (error) {
         if (!rendered) content.textContent = `The project document could not be loaded. ${error.message}`;
@@ -195,12 +244,31 @@
       }
     }
 
-    refreshProject();
-    if (["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname)) {
-      window.setInterval(() => {
-        if (!document.hidden) refreshProject();
-      }, 2000);
-      window.addEventListener("focus", refreshProject);
+    function activateProject() {
+      if (!galleryVisible || document.hidden || preview.inert) {
+        preview.querySelectorAll("video").forEach(video => video.pause());
+        return;
+      }
+      preview.querySelectorAll("img[data-src]").forEach(image => {
+        image.src = image.dataset.src;
+        delete image.dataset.src;
+      });
+      refreshProject();
     }
+
+    activateProjects.push(activateProject);
+    refreshProjects.push(refreshProject);
+    new MutationObserver(activateProject).observe(preview, { attributeFilter: ["inert"] });
   });
+
+  function refreshGallery() {
+    activateProjects.forEach(activate => activate());
+  }
+
+  new IntersectionObserver(([entry]) => {
+    galleryVisible = entry.isIntersecting;
+    refreshGallery();
+  }).observe(gallery);
+  document.addEventListener("visibilitychange", refreshGallery);
+  if (localPreview) window.setInterval(() => refreshProjects.forEach(refresh => refresh()), 2000);
 })();
