@@ -266,6 +266,14 @@ h1 {
   align-items: stretch;
 }
 
+.cv-workspace-frame {
+  display: contents;
+}
+
+.mobile-section-nav {
+  display: none;
+}
+
 .cv-grid-section {
   position: relative;
   --year-column-width: 86px;
@@ -882,6 +890,88 @@ h1 {
     padding: 4px 0;
     font-size: 14px;
   }
+
+  .cv-page.has-mobile-cube {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  .has-mobile-cube .cv-workspace-frame {
+    display: block;
+    position: relative;
+    overflow: clip;
+    perspective: 1000px;
+    --face-depth: calc((100vw - 36px) / 2);
+  }
+
+  .has-mobile-cube .cv-workspace {
+    position: relative;
+    display: block;
+    margin: 0;
+    touch-action: pan-y pinch-zoom;
+    transform-style: preserve-3d;
+    transform: translateZ(calc(-1 * var(--face-depth))) rotateY(var(--section-angle, 0deg));
+    transition: transform 440ms ease;
+  }
+
+  .has-mobile-cube[data-section="portfolio"] {
+    --section-angle: -90deg;
+  }
+
+  .has-mobile-cube :is(.cv-grid-section, .projects-panel) {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    margin: 0;
+    background: var(--paper);
+    backface-visibility: hidden;
+  }
+
+  .has-mobile-cube .cv-grid-section {
+    display: block;
+    position: relative;
+    inset: auto;
+    transform: translateZ(var(--face-depth));
+  }
+
+  .has-mobile-cube .projects-panel {
+    transform: rotateY(90deg) translateZ(var(--face-depth));
+  }
+
+  .has-mobile-cube .project-gallery-frame {
+    aspect-ratio: auto;
+    border: 1px solid #a0a0a0;
+  }
+
+  .has-mobile-cube .project-card {
+    width: min(84cqw, 68cqh);
+    aspect-ratio: 3 / 4;
+  }
+
+  .has-mobile-cube .mobile-section-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+  }
+
+  .has-mobile-cube .mobile-section-nav button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid #a0a0a0;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .has-mobile-cube .mobile-section-nav button[aria-pressed="true"] {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -4,6 +4,12 @@ const projectGallery = cvPage.querySelector(".project-gallery");
 const projectCards = Array.from(projectGallery.querySelectorAll(".project-card"));
 
 const projectDocuments = projectCards.map(card => card.querySelector(".project-document"));
+const mobileLayout = window.matchMedia("(max-width: 700px)");
+const workspace = cvPage.querySelector(".cv-workspace");
+const timeline = workspace.querySelector(".cv-grid-section");
+const portfolio = workspace.querySelector(".projects-panel");
+const sectionButtons = cvPage.querySelectorAll(".mobile-section-nav button");
+let mobileSection = "cv";
 
 function positionProjectCards() {
   const scrollRange = projectGallery.scrollHeight - projectGallery.clientHeight;
@@ -19,7 +25,7 @@ function positionProjectCards() {
     const offset = index - activePosition;
     const distance = Math.abs(offset);
     const preview = projectDocuments[index];
-    const inactive = index !== Math.round(activePosition);
+    const inactive = portfolio.inert || index !== Math.round(activePosition);
     if (preview && preview.inert !== inactive) preview.inert = inactive;
     const tilt = -Math.sign(offset) * Math.min(66, distance * 66);
     const spacing = Math.min(distance, 1) * firstPlaneDistance
@@ -36,7 +42,67 @@ function positionProjectCards() {
 
 projectGallery.addEventListener("scroll", positionProjectCards, { passive: true });
 new ResizeObserver(positionProjectCards).observe(projectGallery);
-positionProjectCards();
+
+function updateMobileLayout() {
+  const enabled = mobileLayout.matches;
+  cvPage.classList.toggle("has-mobile-cube", enabled);
+  const showPortfolio = mobileSection === "portfolio";
+  timeline.inert = enabled && showPortfolio;
+  portfolio.inert = enabled && !showPortfolio;
+  cvPage.dataset.section = mobileSection;
+  sectionButtons.forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.section === mobileSection));
+  });
+  positionProjectCards();
+}
+
+function selectMobileSection(section) {
+  if (section === mobileSection) return;
+  const outgoing = mobileSection === "cv" ? timeline : portfolio;
+  if (section === "portfolio") {
+    cvPage.querySelectorAll(".event-dialog[open] .event-dialog-close").forEach(button => button.click());
+  }
+  if (outgoing.contains(document.activeElement)) {
+    Array.from(sectionButtons).find(button => button.dataset.section === section).focus({ preventScroll: true });
+  }
+  mobileSection = section;
+  updateMobileLayout();
+}
+
+sectionButtons.forEach(button => {
+  button.addEventListener("click", () => selectMobileSection(button.dataset.section));
+});
+
+let swipeStart;
+workspace.addEventListener("touchstart", event => {
+  swipeStart = undefined;
+  if (!mobileLayout.matches || event.touches.length !== 1 ||
+      event.target.closest("canvas, video, input, select, textarea, .thesis-book-button")) return;
+  const { identifier, clientX, clientY } = event.touches[0];
+  swipeStart = { identifier, clientX, clientY };
+}, { passive: true });
+
+workspace.addEventListener("touchcancel", () => { swipeStart = undefined; }, { passive: true });
+workspace.addEventListener("touchend", event => {
+  if (!swipeStart || !mobileLayout.matches) return;
+  const start = swipeStart;
+  swipeStart = undefined;
+  const touch = Array.from(event.changedTouches).find(item => item.identifier === start.identifier);
+  if (!touch) return;
+  const dx = touch.clientX - start.clientX;
+  const dy = touch.clientY - start.clientY;
+  if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
+
+  if (event.cancelable) event.preventDefault();
+  if (mobileSection === "cv") {
+    if (dx < 0) selectMobileSection("portfolio");
+  } else if (dx > 0) {
+    selectMobileSection("cv");
+  }
+}, { passive: false });
+
+mobileLayout.addEventListener("change", updateMobileLayout);
+updateMobileLayout();
 
 const thesisBook = projectGallery.querySelector(".thesis-book-button");
 let bookYaw = 26;

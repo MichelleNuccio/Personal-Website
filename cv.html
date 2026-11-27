@@ -7,8 +7,8 @@
   <title>Michelle Nuccio. Welcome in my corner of the web :)</title>
   <meta property="og:title" content="Michelle Nuccio. Welcome in my corner of the web :)" />
   <meta name="twitter:title" content="Michelle Nuccio. Welcome in my corner of the web :)" />
-  <link rel="stylesheet" href="cv.css?v=local-fonts" />
-  <script src="js/cv.js?v=project-activation" defer></script>
+  <link rel="stylesheet" href="cv.css?v=full-cv-face" />
+  <script src="js/cv.js?v=mobile-cv-portfolio" defer></script>
   <script src="js/project-word.js?v=on-demand" defer></script>
   <script src="js/guestbook.js?v=anonymous-requests" defer></script>
 </head>
@@ -22,7 +22,7 @@
         <p class="cv-intro">I’m an artist, computational designer, and data-driven researcher. I love the internet: its strange corners, unexpected connections, and endless possibilities for sharing ideas. I work with research, data, and code, and I’m exploring the interface as a creative language for expression, storytelling, and experimentation.</p>
         <div class="cv-contacts">
           <span>mail: <a href="mailto:nucciomichelle@icloud.com">nucciomichelle@icloud.com</a></span>
-          <span>IG: <a href="https://www.instagram.com/michelle_nuccio/">@michelle_nuccio</a></span>
+          <span>IG: <a href="https://www.instagram.com/michellenuccio/">@michellenuccio</a></span>
         </div>
       </div>
     </header>
@@ -38,8 +38,13 @@
         </div>
       </div>
     </div>
+    <nav class="mobile-section-nav" aria-label="Site sections">
+      <button type="button" data-section="cv" aria-controls="cv-timeline" aria-pressed="true">CV</button>
+      <button type="button" data-section="portfolio" aria-controls="cv-portfolio" aria-pressed="false">Portfolio</button>
+    </nav>
+    <div class="cv-workspace-frame">
     <div class="cv-workspace">
-      <section class="cv-grid-section" aria-label="Curriculum vitae">
+      <section class="cv-grid-section" id="cv-timeline" aria-label="Curriculum vitae">
         <div class="grid-wrap">
           <table class="cv-grid">
             <thead>
@@ -191,7 +196,7 @@
         </div>
       </section>
 
-      <section class="projects-panel">
+      <section class="projects-panel" id="cv-portfolio" aria-label="Portfolio">
         <div class="project-gallery-frame">
           <div class="project-gallery" role="region" tabindex="0" aria-label="Projects">
             <div class="project-stage">
@@ -289,6 +294,7 @@
           </div>
         </div>
       </section>
+    </div>
     </div>
 
     <!-- experience-dialogs:start -->
