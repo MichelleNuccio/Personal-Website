@@ -936,6 +936,7 @@ h1 {
   }
 
   .has-mobile-cube .projects-panel {
+    grid-template-rows: minmax(0, 1fr);
     transform: rotateY(90deg) translateZ(var(--face-depth));
   }
 
@@ -947,6 +948,10 @@ h1 {
   .has-mobile-cube .project-card {
     width: min(84cqw, 68cqh);
     aspect-ratio: 3 / 4;
+  }
+
+  .has-mobile-cube #guestbook {
+    overscroll-behavior-y: auto;
   }
 
   .has-mobile-cube .mobile-section-nav {

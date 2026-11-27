@@ -79,14 +79,41 @@ workspace.addEventListener("touchstart", event => {
   if (!mobileLayout.matches || event.touches.length !== 1 ||
       event.target.closest("canvas, video, input, select, textarea, .thesis-book-button")) return;
   const { identifier, clientX, clientY } = event.touches[0];
-  swipeStart = { identifier, clientX, clientY };
+  const preview = mobileSection === "portfolio" ? event.target.closest(".project-document") : null;
+  swipeStart = { identifier, clientX, clientY, preview, galleryScrollTop: projectGallery.scrollTop };
 }, { passive: true });
+
+workspace.addEventListener("touchmove", event => {
+  const start = swipeStart;
+  if (!start?.preview || !mobileLayout.matches || event.touches.length !== 1) return;
+  const touch = event.touches[0];
+  if (touch.identifier !== start.identifier) return;
+  const dx = touch.clientX - start.clientX;
+  const dy = start.clientY - touch.clientY;
+
+  if (!start.scrollsGallery) {
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 6) return;
+    const atEdge = (scroller, direction) => direction < 0
+      ? scroller.scrollTop <= 1
+      : scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 1;
+    if (Math.abs(dy) <= Math.abs(dx) || !event.cancelable ||
+        !atEdge(start.preview, dy) || atEdge(projectGallery, dy)) {
+      start.preview = null;
+      return;
+    }
+    start.scrollsGallery = true;
+  }
+
+  if (event.cancelable) event.preventDefault();
+  projectGallery.scrollTop = start.galleryScrollTop + dy;
+}, { passive: false });
 
 workspace.addEventListener("touchcancel", () => { swipeStart = undefined; }, { passive: true });
 workspace.addEventListener("touchend", event => {
   if (!swipeStart || !mobileLayout.matches) return;
   const start = swipeStart;
   swipeStart = undefined;
+  if (start.scrollsGallery) return;
   const touch = Array.from(event.changedTouches).find(item => item.identifier === start.identifier);
   if (!touch) return;
   const dx = touch.clientX - start.clientX;
